@@ -17,8 +17,3 @@ output "s3_bucket_arn" {
   description = "S3 bucket ARN"
   value       = aws_s3_bucket.homepage.arn
 }
-
-output "deployer_policy_arn" {
-  description = "ARN of the least-privilege deployer IAM policy"
-  value       = aws_iam_policy.deployer.arn
-}
