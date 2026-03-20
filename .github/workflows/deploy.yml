@@ -55,11 +55,11 @@ jobs:
 
       - name: Terraform Plan
         working-directory: ${{ env.TF_DIR }}
-        run: terraform plan -out=tfplan
+        run: terraform plan -var="deployer_role_arn=${{ env.IAM_ROLE }}" -out=tfplan
 
       - name: Terraform Apply
         working-directory: ${{ env.TF_DIR }}
-        run: terraform apply -auto-approve tfplan
+        run: terraform apply -auto-approve -var="deployer_role_arn=${{ env.IAM_ROLE }}"
 
       - name: Get Terraform Outputs
         id: tf-output
