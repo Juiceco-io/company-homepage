@@ -1,30 +1,25 @@
 import Link from "next/link";
+import Logo from "./Logo";
 
 const footerLinks = [
-  { href: "/", label: "Home" },
+  { href: "/#services", label: "Services" },
   { href: "/about/", label: "About" },
   { href: "/contact/", label: "Contact" },
 ];
 
 export default function Footer() {
-  const year = new Date().getFullYear();
-
   return (
     <footer className="bg-surface border-t border-border">
       <div className="max-w-6xl mx-auto px-6 py-12">
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-          {/* Logo + copyright */}
-          <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              className="flex items-center gap-2 text-text-primary font-bold hover:text-accent transition-colors duration-200"
-            >
-              <span className="text-accent text-xl">⚡</span>
-              Juiceco
+          {/* Logo + tagline */}
+          <div className="flex flex-col items-center md:items-start gap-2">
+            <Link href="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity duration-200">
+              <Logo size={32} />
+              <span className="text-orange-500 font-bold text-lg tracking-tight">Juiceco</span>
             </Link>
-            <span className="text-border">|</span>
-            <p className="text-text-secondary text-sm">
-              © {year} Juiceco. All rights reserved.
+            <p className="text-text-secondary text-xs">
+              Custom software built for companies that want to move fast.
             </p>
           </div>
 
@@ -40,6 +35,12 @@ export default function Footer() {
               </Link>
             ))}
           </nav>
+        </div>
+
+        <div className="mt-8 pt-8 border-t border-border text-center">
+          <p className="text-text-secondary text-sm">
+            © 2026 Juiceco. Built with ☕ and 🍊
+          </p>
         </div>
       </div>
     </footer>
