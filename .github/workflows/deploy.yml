@@ -14,7 +14,7 @@ env:
   AWS_ACCOUNT_ID: "680666325340"
   IAM_ROLE: arn:aws:iam::680666325340:role/github-actions-deployer
   TF_DIR: infrastructure
-  # State bucket is in a separate account; Terraform backend handles auth via the deployer role
+  # State bucket is in a separate account; use TF_STATE_ROLE for Terraform operations
   TF_STATE_ROLE: arn:aws:iam::389813258758:role/github-actions-terraform-state
 
 jobs:
@@ -34,11 +34,12 @@ jobs:
         # actions/checkout v4.2.2
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
-      - name: Configure AWS Credentials (OIDC)
+      - name: Configure AWS credentials (Terraform state)
         # aws-actions/configure-aws-credentials v4.0.2
+        # Use TF_STATE_ROLE (account 389813258758) — has access to the Terraform state bucket
         uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
         with:
-          role-to-assume: ${{ env.IAM_ROLE }}
+          role-to-assume: ${{ env.TF_STATE_ROLE }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Setup Terraform
@@ -105,8 +106,9 @@ jobs:
       - name: Build static export
         run: npm run build
 
-      - name: Configure AWS Credentials (OIDC)
+      - name: Configure AWS credentials (Deploy)
         # aws-actions/configure-aws-credentials v4.0.2
+        # Use IAM_ROLE (account 680666325340) — has access to the S3 bucket and CloudFront
         uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
         with:
           role-to-assume: ${{ env.IAM_ROLE }}
