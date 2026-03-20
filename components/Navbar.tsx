@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Logo from "./Logo";
 
 const navLinks = [
@@ -13,17 +13,24 @@ const navLinks = [
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <nav className="bg-background border-b border-border sticky top-0 z-50 backdrop-blur-sm">
+    <nav className={`navbar-glass sticky top-0 z-50 ${scrolled ? "scrolled" : ""}`}>
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo + Wordmark */}
           <Link
             href="/"
-            className="flex items-center gap-2.5 hover:opacity-90 transition-opacity duration-200"
+            className="logo-wrap flex items-center gap-2.5 hover:opacity-90 transition-opacity duration-200"
           >
-            <Logo size={36} />
+            <Logo size={36} className="logo-svg logo-load-anim" />
             <span className="text-orange-500 font-bold text-xl tracking-tight">Juice</span>
           </Link>
 
@@ -33,14 +40,14 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-text-secondary hover:text-text-primary text-sm font-medium transition-colors duration-200"
+                className="nav-link-animated text-text-secondary hover:text-text-primary text-sm font-medium transition-colors duration-200"
               >
                 {link.label}
               </Link>
             ))}
             <Link
               href="/contact/"
-              className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold transition-colors duration-200"
+              className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold transition-all duration-200 hover:shadow-[0_0_16px_rgba(249,115,22,0.5)]"
             >
               Start a Project
             </Link>
@@ -67,7 +74,7 @@ export default function Navbar() {
 
         {/* Mobile menu */}
         {isOpen && (
-          <div className="md:hidden py-4 border-t border-border">
+          <div className="md:hidden py-4 border-t border-orange-500/10">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
