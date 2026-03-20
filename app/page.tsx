@@ -84,7 +84,7 @@ export default function HomePage() {
             <span className="text-orange-500">That Drives Business</span>
           </h1>
           <p className="text-xl md:text-2xl text-text-secondary max-w-3xl mx-auto mb-12 leading-relaxed">
-            Juiceco is a custom development agency. We partner with companies to design, build, and ship
+            Juice is a custom development agency. We partner with companies to design, build, and ship
             web apps, mobile products, and internal tools — fast.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

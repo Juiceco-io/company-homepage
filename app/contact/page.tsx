@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contact — Juiceco",
-  description: "Start a project with Juiceco. Tell us what you're building and we'll be in touch.",
+  title: "Contact — Juice",
+  description: "Start a project with Juice. Tell us what you're building and we'll be in touch.",
 };
 
 export default function ContactPage() {
@@ -21,10 +21,10 @@ export default function ContactPage() {
             Got something to build? Tell us about it. We&apos;ll read every message and reply within one business day.
             Or drop us a line directly at{" "}
             <a
-              href="mailto:hello@juiceco.io"
+              href="mailto:hello@juice.io"
               className="text-orange-500 hover:text-orange-400 transition-colors duration-200"
             >
-              hello@juiceco.io
+              hello@juice.io
             </a>
             .
           </p>
@@ -39,7 +39,7 @@ export default function ContactPage() {
               Tell us about your project
             </h2>
             <form
-              action="mailto:hello@juiceco.io"
+              action="mailto:hello@juice.io"
               method="get"
               encType="text/plain"
               className="space-y-6"
@@ -127,10 +127,10 @@ export default function ContactPage() {
                 Always a human on the other end.
               </p>
               <a
-                href="mailto:hello@juiceco.io"
+                href="mailto:hello@juice.io"
                 className="text-orange-500 hover:text-orange-400 text-sm font-medium transition-colors duration-200"
               >
-                hello@juiceco.io
+                hello@juice.io
               </a>
             </div>
             <div className="bg-surface-2 border border-border rounded-xl p-6 hover:border-orange-500/30 transition-colors duration-200">

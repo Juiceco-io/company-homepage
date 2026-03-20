@@ -3,9 +3,9 @@ import Link from "next/link";
 import { Zap, Shield, Users, MessageSquare } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About — Juiceco",
+  title: "About — Juice",
   description:
-    "We're Juiceco — a small team with big output, obsessed with shipping quality custom software for companies that move fast.",
+    "We're Juice — a small team with big output, obsessed with shipping quality custom software for companies that move fast.",
 };
 
 const values = [
@@ -51,7 +51,7 @@ export default function AboutPage() {
             Our story
           </div>
           <h1 className="text-5xl md:text-6xl font-bold text-text-primary mb-6 leading-tight">
-            We&apos;re Juiceco.
+            We&apos;re Juice.
             <br />
             <span className="text-orange-500">Small team, big output.</span>
           </h1>
@@ -71,13 +71,13 @@ export default function AboutPage() {
               </h2>
               <div className="space-y-4 text-text-secondary leading-relaxed">
                 <p>
-                  Juiceco was born out of frustration. We kept seeing the same problem:
+                  Juice was born out of frustration. We kept seeing the same problem:
                   companies with great ideas, stuck waiting months for software that should
                   take weeks. Agencies that overpromised, underdelivered, and disappeared
                   after launch.
                 </p>
                 <p>
-                  We built Juiceco to be the agency we always wished existed — a tight team
+                  We built Juice to be the agency we always wished existed — a tight team
                   of engineers and designers who care about your business outcomes as much
                   as you do. We stay small on purpose: it keeps us sharp, fast, and
                   accountable.

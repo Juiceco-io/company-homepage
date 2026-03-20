@@ -12,13 +12,13 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Juiceco — Custom Software Development Agency",
+  title: "Juice — Custom Software Development Agency",
   description:
-    "Juiceco is a custom software development agency. We partner with companies to design, build, and ship web apps, mobile products, and internal tools — fast.",
+    "Juice is a custom software development agency. We partner with companies to design, build, and ship web apps, mobile products, and internal tools — fast.",
   openGraph: {
-    title: "Juiceco — Custom Software Development Agency",
+    title: "Juice — Custom Software Development Agency",
     description:
-      "Juiceco is a custom software development agency. We partner with companies to design, build, and ship web apps, mobile products, and internal tools — fast.",
+      "Juice is a custom software development agency. We partner with companies to design, build, and ship web apps, mobile products, and internal tools — fast.",
     type: "website",
   },
 };
