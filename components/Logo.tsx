@@ -26,7 +26,7 @@ export default function Logo({ size = 40, className = "" }: LogoProps) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
-      aria-label="Juiceco logo"
+      aria-label="Juice logo"
     >
       {/* Outer circle fill */}
       <circle cx={cx} cy={cy} r={r} fill="#F97316" stroke="#EA580C" strokeWidth="2" />
