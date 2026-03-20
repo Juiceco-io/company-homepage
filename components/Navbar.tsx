@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import Logo from "./Logo";
 
 const navLinks = [
-  { href: "/", label: "Home" },
+  { href: "/#services", label: "Services" },
+  { href: "/#work", label: "Work" },
   { href: "/about/", label: "About" },
   { href: "/contact/", label: "Contact" },
 ];
@@ -16,13 +18,13 @@ export default function Navbar() {
     <nav className="bg-background border-b border-border sticky top-0 z-50 backdrop-blur-sm">
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
+          {/* Logo + Wordmark */}
           <Link
             href="/"
-            className="flex items-center gap-2 text-text-primary font-bold text-xl hover:text-accent transition-colors duration-200"
+            className="flex items-center gap-2.5 hover:opacity-90 transition-opacity duration-200"
           >
-            <span className="text-accent text-2xl">⚡</span>
-            Juiceco
+            <Logo size={36} />
+            <span className="text-orange-500 font-bold text-xl tracking-tight">Juiceco</span>
           </Link>
 
           {/* Desktop nav */}
@@ -38,9 +40,9 @@ export default function Navbar() {
             ))}
             <Link
               href="/contact/"
-              className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-accent hover:bg-accent-hover text-white text-sm font-semibold transition-colors duration-200"
+              className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold transition-colors duration-200"
             >
-              Get started
+              Start a Project
             </Link>
           </div>
 
@@ -79,9 +81,9 @@ export default function Navbar() {
             <Link
               href="/contact/"
               onClick={() => setIsOpen(false)}
-              className="inline-flex items-center justify-center mt-4 w-full px-4 py-3 rounded-lg bg-accent hover:bg-accent-hover text-white text-sm font-semibold transition-colors duration-200"
+              className="inline-flex items-center justify-center mt-4 w-full px-4 py-3 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold transition-colors duration-200"
             >
-              Get started
+              Start a Project
             </Link>
           </div>
         )}
