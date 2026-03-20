@@ -24,6 +24,10 @@ terraform {
 provider "aws" {
   region = "us-east-1"
 
+  assume_role {
+    role_arn = var.deployer_role_arn
+  }
+
   default_tags {
     tags = {
       Project     = "company-homepage"
