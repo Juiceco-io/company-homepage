@@ -16,7 +16,7 @@ export default function Footer() {
           <div className="flex flex-col items-center md:items-start gap-2">
             <Link href="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity duration-200">
               <Logo size={32} />
-              <span className="text-orange-500 font-bold text-lg tracking-tight">Juice</span>
+              <span className="text-orange-500 font-bold text-lg tracking-tight">Juice Technology Solutions</span>
             </Link>
             <p className="text-text-secondary text-xs">
               Custom software built for companies that want to move fast.
@@ -39,7 +39,7 @@ export default function Footer() {
 
         <div className="mt-8 pt-8 border-t border-border text-center">
           <p className="text-text-secondary text-sm">
-            © 2026 Juice. Built with ☕ and 🍊
+            © 2026 Juice Technology Solutions. Built with ☕ and 🍊
           </p>
         </div>
       </div>
