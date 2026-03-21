@@ -3,9 +3,18 @@ import Link from "next/link";
 import { Zap, Shield, Users, MessageSquare } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About — Juice",
+  title: "About Juice | Custom Software Agency",
   description:
-    "We're Juice — a small team with big output, obsessed with shipping quality custom software for companies that move fast.",
+    "We're Juice — a small team with big output, obsessed with shipping quality custom software for companies that want to move fast.",
+  alternates: {
+    canonical: "https://juiceco.io/about",
+  },
+  openGraph: {
+    title: "About Juice | Custom Software Agency",
+    description:
+      "We're Juice — a small team with big output, obsessed with shipping quality custom software for companies that want to move fast.",
+    url: "https://juiceco.io/about",
+  },
 };
 
 const values = [
@@ -123,7 +132,7 @@ export default function AboutPage() {
                   className="group bg-surface border border-border rounded-xl p-6 hover:border-orange-500/50 transition-colors duration-200"
                 >
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="text-orange-500">
+                    <div className="text-orange-500" aria-hidden="true">
                       <Icon size={20} strokeWidth={1.5} />
                     </div>
                     <h3 className="text-lg font-semibold text-text-primary">{value.title}</h3>
@@ -150,6 +159,7 @@ export default function AboutPage() {
           <Link
             href="/contact/"
             className="inline-flex items-center justify-center px-8 py-4 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-semibold text-lg transition-colors duration-200"
+            aria-label="Start a project with Juice"
           >
             Start a Project
           </Link>

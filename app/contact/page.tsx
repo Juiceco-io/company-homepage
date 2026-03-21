@@ -1,8 +1,18 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contact — Juice",
-  description: "Start a project with Juice. Tell us what you're building and we'll be in touch.",
+  title: "Start a Project | Juice",
+  description:
+    "Ready to build something great? Tell us about your project and we'll get back to you within one business day. Custom software development starts here.",
+  alternates: {
+    canonical: "https://juiceco.io/contact",
+  },
+  openGraph: {
+    title: "Start a Project | Juice",
+    description:
+      "Ready to build something great? Tell us about your project and we'll get back to you within one business day.",
+    url: "https://juiceco.io/contact",
+  },
 };
 
 export default function ContactPage() {
@@ -23,6 +33,7 @@ export default function ContactPage() {
             <a
               href="mailto:hello@juice.io"
               className="text-orange-500 hover:text-orange-400 transition-colors duration-200"
+              aria-label="Email Juice at hello@juice.io"
             >
               hello@juice.io
             </a>
@@ -121,7 +132,7 @@ export default function ContactPage() {
           {/* Alternative contact */}
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="bg-surface-2 border border-border rounded-xl p-6 hover:border-orange-500/30 transition-colors duration-200">
-              <div className="text-2xl mb-3">📧</div>
+              <div className="text-2xl mb-3" aria-hidden="true">📧</div>
               <h3 className="font-semibold text-text-primary mb-1">Email us directly</h3>
               <p className="text-text-secondary text-sm mb-3">
                 Always a human on the other end.
@@ -129,12 +140,13 @@ export default function ContactPage() {
               <a
                 href="mailto:hello@juice.io"
                 className="text-orange-500 hover:text-orange-400 text-sm font-medium transition-colors duration-200"
+                aria-label="Send email to hello@juice.io"
               >
                 hello@juice.io
               </a>
             </div>
             <div className="bg-surface-2 border border-border rounded-xl p-6 hover:border-orange-500/30 transition-colors duration-200">
-              <div className="text-2xl mb-3">⚡</div>
+              <div className="text-2xl mb-3" aria-hidden="true">⚡</div>
               <h3 className="font-semibold text-text-primary mb-1">Fast response</h3>
               <p className="text-text-secondary text-sm">
                 We reply within 1 business day. If you&apos;re in a hurry, say so — we&apos;ll prioritize.

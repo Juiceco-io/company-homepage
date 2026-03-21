@@ -13,15 +13,73 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Juice — Custom Software Development Agency",
+  title: {
+    default: "Juice — Custom Software Development Agency",
+    template: "%s | Juice",
+  },
   description:
-    "Juice is a custom software development agency. We partner with companies to design, build, and ship web apps, mobile products, and internal tools — fast.",
+    "Juice builds custom web apps, mobile products, and internal tools for companies that want to move fast. We design, build, and ship software that drives business.",
+  keywords: [
+    "custom software development",
+    "web development agency",
+    "mobile app development",
+    "software company",
+    "Next.js development",
+  ],
+  authors: [{ name: "Juice" }],
+  creator: "Juice",
+  metadataBase: new URL("https://juiceco.io"),
   openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://juiceco.io",
     title: "Juice — Custom Software Development Agency",
     description:
-      "Juice is a custom software development agency. We partner with companies to design, build, and ship web apps, mobile products, and internal tools — fast.",
-    type: "website",
+      "Juice builds custom web apps, mobile products, and internal tools for companies that want to move fast. We design, build, and ship software that drives business.",
+    siteName: "Juice",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Juice — Custom Software Development Agency",
+      },
+    ],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Juice — Custom Software Development Agency",
+    description:
+      "Juice builds custom web apps, mobile products, and internal tools for companies that want to move fast. We design, build, and ship software that drives business.",
+    images: ["/og-image.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+  alternates: {
+    canonical: "https://juiceco.io",
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Juice",
+  url: "https://juiceco.io",
+  logo: "https://juiceco.io/logo.png",
+  description:
+    "Custom software development agency. We partner with companies to design, build, and ship web apps, mobile products, and internal tools — fast.",
+  contactPoint: {
+    "@type": "ContactPoint",
+    email: "hello@juice.io",
+    contactType: "sales",
+  },
+  sameAs: ["https://github.com/Juiceco-io"],
 };
 
 export default function RootLayout({
@@ -31,6 +89,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={inter.variable}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className="bg-background text-text-primary min-h-screen flex flex-col font-sans antialiased">
         <Navbar />
         <PageTransition>
