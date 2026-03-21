@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Start a Project | Juice",
+  title: "Start a Project | Juice Technology Solutions",
   description:
     "Ready to build something great? Tell us about your project and we'll get back to you within one business day. Custom software development starts here.",
   alternates: {
     canonical: "https://juiceco.io/contact",
   },
   openGraph: {
-    title: "Start a Project | Juice",
+    title: "Start a Project | Juice Technology Solutions",
     description:
       "Ready to build something great? Tell us about your project and we'll get back to you within one business day.",
     url: "https://juiceco.io/contact",
@@ -33,7 +33,7 @@ export default function ContactPage() {
             <a
               href="mailto:hello@juice.io"
               className="text-orange-500 hover:text-orange-400 transition-colors duration-200"
-              aria-label="Email Juice at hello@juice.io"
+              aria-label="Email Juice Technology Solutions at hello@juice.io"
             >
               hello@juice.io
             </a>
