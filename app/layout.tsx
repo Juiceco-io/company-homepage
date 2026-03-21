@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     template: "%s | Juice Technology Solutions",
   },
   description:
-    "Juice Technology Solutions builds custom web apps, mobile products, and internal tools for companies that want to move fast. We design, build, and ship software that drives business.",
+    "Juice Technology Solutions builds custom web apps, mobile products, and internal tools for companies that want to move fast. We design, build, and ship software that drives business. Get more for the squeeze.",
   keywords: [
     "custom software development",
     "web development agency",
