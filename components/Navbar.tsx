@@ -22,7 +22,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className={`navbar-glass sticky top-0 z-50 ${scrolled ? "scrolled" : ""}`}>
+    <nav className={}>
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo + Wordmark */}
@@ -31,7 +31,7 @@ export default function Navbar() {
             className="logo-wrap flex items-center gap-2.5 hover:opacity-90 transition-opacity duration-200"
           >
             <Logo size={36} className="logo-svg logo-load-anim" />
-            <span className="text-orange-500 font-bold text-xl tracking-tight">Juice</span>
+            <span className="text-orange-500 font-bold text-xl tracking-tight">Juice Technology Solutions</span>
           </Link>
 
           {/* Desktop nav */}
