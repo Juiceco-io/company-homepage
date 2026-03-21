@@ -113,7 +113,7 @@ export default function HomePage() {
 
           {/* Subheadline */}
           <p className="fade-up-delay-1 text-xl md:text-2xl text-text-secondary max-w-3xl mx-auto mb-12 leading-relaxed">
-            Juice is a custom development agency. We partner with companies to design, build, and ship
+            Juice Technology Solutions is a custom development agency. We partner with companies to design, build, and ship
             web apps, mobile products, and internal tools — fast.
           </p>
 
