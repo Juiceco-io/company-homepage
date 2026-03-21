@@ -21,6 +21,9 @@ export default function Footer() {
             <p className="text-text-secondary text-xs">
               Custom software built for companies that want to move fast.
             </p>
+            <p className="text-orange-500/60 text-xs italic">
+              Get more for the squeeze.
+            </p>
           </div>
 
           {/* Nav links */}

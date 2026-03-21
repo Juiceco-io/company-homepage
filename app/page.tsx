@@ -111,6 +111,11 @@ export default function HomePage() {
             ))}
           </h1>
 
+          {/* Slogan */}
+          <p className="fade-up-delay-1 text-base md:text-lg italic text-orange-400/80 mb-4 tracking-wide">
+            Get more for the squeeze.
+          </p>
+
           {/* Subheadline */}
           <p className="fade-up-delay-1 text-xl md:text-2xl text-text-secondary max-w-3xl mx-auto mb-12 leading-relaxed">
             Juice Technology Solutions is a custom development agency. We partner with companies to design, build, and ship
