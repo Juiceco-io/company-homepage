@@ -3,16 +3,16 @@ import Link from "next/link";
 import { Zap, Shield, Users, MessageSquare } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About Juice | Custom Software Agency",
+  title: "About Juice Technology Solutions | Custom Software Agency",
   description:
-    "We're Juice — a small team with big output, obsessed with shipping quality custom software for companies that want to move fast.",
+    "We're Juice Technology Solutions — a small team with big output, obsessed with shipping quality custom software for companies that want to move fast.",
   alternates: {
     canonical: "https://juiceco.io/about",
   },
   openGraph: {
-    title: "About Juice | Custom Software Agency",
+    title: "About Juice Technology Solutions | Custom Software Agency",
     description:
-      "We're Juice — a small team with big output, obsessed with shipping quality custom software for companies that want to move fast.",
+      "We're Juice Technology Solutions — a small team with big output, obsessed with shipping quality custom software for companies that want to move fast.",
     url: "https://juiceco.io/about",
   },
 };
@@ -60,7 +60,7 @@ export default function AboutPage() {
             Our story
           </div>
           <h1 className="text-5xl md:text-6xl font-bold text-text-primary mb-6 leading-tight">
-            We&apos;re Juice.
+            We&apos;re Juice Technology Solutions.
             <br />
             <span className="text-orange-500">Small team, big output.</span>
           </h1>
@@ -80,13 +80,13 @@ export default function AboutPage() {
               </h2>
               <div className="space-y-4 text-text-secondary leading-relaxed">
                 <p>
-                  Juice was born out of frustration. We kept seeing the same problem:
+                  Juice Technology Solutions was born out of frustration. We kept seeing the same problem:
                   companies with great ideas, stuck waiting months for software that should
                   take weeks. Agencies that overpromised, underdelivered, and disappeared
                   after launch.
                 </p>
                 <p>
-                  We built Juice to be the agency we always wished existed — a tight team
+                  We built Juice Technology Solutions to be the agency we always wished existed — a tight team
                   of engineers and designers who care about your business outcomes as much
                   as you do. We stay small on purpose: it keeps us sharp, fast, and
                   accountable.
@@ -159,7 +159,7 @@ export default function AboutPage() {
           <Link
             href="/contact/"
             className="inline-flex items-center justify-center px-8 py-4 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-semibold text-lg transition-colors duration-200"
-            aria-label="Start a project with Juice"
+            aria-label="Start a project with Juice Technology Solutions"
           >
             Start a Project
           </Link>

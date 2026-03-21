@@ -14,11 +14,11 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Juice — Custom Software Development Agency",
-    template: "%s | Juice",
+    default: "Juice Technology Solutions — Custom Software Development Agency",
+    template: "%s | Juice Technology Solutions",
   },
   description:
-    "Juice builds custom web apps, mobile products, and internal tools for companies that want to move fast. We design, build, and ship software that drives business.",
+    "Juice Technology Solutions builds custom web apps, mobile products, and internal tools for companies that want to move fast. We design, build, and ship software that drives business.",
   keywords: [
     "custom software development",
     "web development agency",
@@ -26,31 +26,31 @@ export const metadata: Metadata = {
     "software company",
     "Next.js development",
   ],
-  authors: [{ name: "Juice" }],
-  creator: "Juice",
+  authors: [{ name: "Juice Technology Solutions" }],
+  creator: "Juice Technology Solutions",
   metadataBase: new URL("https://juiceco.io"),
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "https://juiceco.io",
-    title: "Juice — Custom Software Development Agency",
+    title: "Juice Technology Solutions — Custom Software Development Agency",
     description:
-      "Juice builds custom web apps, mobile products, and internal tools for companies that want to move fast. We design, build, and ship software that drives business.",
-    siteName: "Juice",
+      "Juice Technology Solutions builds custom web apps, mobile products, and internal tools for companies that want to move fast. We design, build, and ship software that drives business.",
+    siteName: "Juice Technology Solutions",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Juice — Custom Software Development Agency",
+        alt: "Juice Technology Solutions — Custom Software Development Agency",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Juice — Custom Software Development Agency",
+    title: "Juice Technology Solutions — Custom Software Development Agency",
     description:
-      "Juice builds custom web apps, mobile products, and internal tools for companies that want to move fast. We design, build, and ship software that drives business.",
+      "Juice Technology Solutions builds custom web apps, mobile products, and internal tools for companies that want to move fast. We design, build, and ship software that drives business.",
     images: ["/og-image.png"],
   },
   robots: {
@@ -69,7 +69,7 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "Juice",
+  name: "Juice Technology Solutions",
   url: "https://juiceco.io",
   logo: "https://juiceco.io/logo.png",
   description:
