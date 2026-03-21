@@ -22,7 +22,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className={}>
+    <nav className={`navbar-glass sticky top-0 z-50 ${scrolled ? "scrolled" : ""}`}>
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo + Wordmark */}
