@@ -64,6 +64,11 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://juiceco.io",
   },
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+  },
 };
 
 const jsonLd = {
