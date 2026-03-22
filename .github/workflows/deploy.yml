@@ -93,7 +93,9 @@ jobs:
 
       - name: Terraform Init
         working-directory: ${{ env.TF_DIR }}
-        run: terraform init
+        run: |
+          terraform init \
+            -backend-config="key=company-homepage/${{ needs.set-environment.outputs.environment }}/terraform.tfstate"
 
       - name: Terraform Plan
         working-directory: ${{ env.TF_DIR }}
