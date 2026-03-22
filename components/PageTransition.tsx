@@ -1,40 +1,7 @@
-'use client'
-
-import { motion, AnimatePresence, type Variants, type Transition } from 'framer-motion'
-
-type CubicBezier = [number, number, number, number]
-const EASE_OUT_EXPO: CubicBezier = [0.16, 1, 0.3, 1]
-import { usePathname } from 'next/navigation'
-
-const pageVariants: Variants = {
-  hidden: { opacity: 0, y: 16 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.45, ease: EASE_OUT_EXPO } as Transition,
-  },
-  exit: {
-    opacity: 0,
-    y: -10,
-    transition: { duration: 0.25, ease: 'easeIn' } as Transition,
-  },
-}
-
+// PageTransition: Framer Motion AnimatePresence caused double-animation bugs in
+// Next.js App Router (router and AnimatePresence fight each other on re-navigation).
+// Replaced with a simple CSS fadeIn on `main` in globals.css.
+// This component is kept as a passthrough to avoid breaking any existing imports.
 export default function PageTransition({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname()
-
-  return (
-    <AnimatePresence mode="wait" initial={false}>
-      <motion.div
-        key={pathname}
-        variants={pageVariants}
-        initial="hidden"
-        animate="visible"
-        exit="exit"
-        style={{ display: 'contents' }}
-      >
-        {children}
-      </motion.div>
-    </AnimatePresence>
-  )
+  return <>{children}</>
 }
