@@ -14,10 +14,10 @@ terraform {
 
   backend "s3" {
     bucket         = "juiceco-terraform-state"
-    key            = "company-homepage/dev/terraform.tfstate"
     region         = "us-east-1"
     dynamodb_table = "juiceco-terraform-locks"
     encrypt        = true
+    # key is provided via -backend-config in CI to support dev/qa/prod state isolation
   }
 }
 
@@ -37,3 +37,4 @@ provider "aws" {
     }
   }
 }
+
