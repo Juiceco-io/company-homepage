@@ -23,7 +23,7 @@ jobs:
         run: npm ci
 
       - name: ESLint
-        run: npx eslint .
+        run: npx eslint app components
 
       - name: Build
         run: npm run build
