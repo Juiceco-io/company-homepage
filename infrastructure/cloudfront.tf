@@ -70,7 +70,10 @@ resource "aws_cloudfront_response_headers_policy" "security_headers" {
 }
 
 locals {
-  use_custom_domain = length(var.cloudfront_aliases) > 0
+  use_custom_domain     = length(var.cloudfront_aliases) > 0
+  certificate_issued    = local.use_custom_domain ? try(aws_acm_certificate.homepage[0].status, "") == "ISSUED" : false
+  effective_aliases     = local.certificate_issued ? var.cloudfront_aliases : []
+  effective_cert_arn    = local.certificate_issued ? aws_acm_certificate.homepage[0].arn : null
 }
 
 resource "aws_acm_certificate" "homepage" {
@@ -90,7 +93,7 @@ resource "aws_cloudfront_distribution" "homepage" {
   default_root_object = "index.html"
   price_class         = "PriceClass_100"
   comment             = "${var.project}-${var.environment}"
-  aliases             = var.cloudfront_aliases
+  aliases             = local.effective_aliases
 
   origin {
     domain_name              = aws_s3_bucket.homepage.bucket_regional_domain_name
@@ -129,9 +132,9 @@ resource "aws_cloudfront_distribution" "homepage" {
   }
 
   viewer_certificate {
-    acm_certificate_arn            = local.use_custom_domain ? aws_acm_certificate.homepage[0].arn : null
-    cloudfront_default_certificate = local.use_custom_domain ? false : true
-    ssl_support_method             = local.use_custom_domain ? "sni-only" : null
-    minimum_protocol_version       = local.use_custom_domain ? "TLSv1.2_2021" : null
+    acm_certificate_arn            = local.effective_cert_arn
+    cloudfront_default_certificate = local.certificate_issued ? false : true
+    ssl_support_method             = local.certificate_issued ? "sni-only" : null
+    minimum_protocol_version       = local.certificate_issued ? "TLSv1.2_2021" : null
   }
 }
