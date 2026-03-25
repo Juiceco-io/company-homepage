@@ -28,6 +28,12 @@ variable "rum_domain" {
   default     = "juicetech.io"
 }
 
+variable "cloudfront_aliases" {
+  description = "Custom domain aliases for CloudFront"
+  type        = list(string)
+  default     = []
+}
+
 variable "rum_session_sample_rate" {
   description = "CloudWatch RUM session sample rate as a 0-1 decimal"
   type        = number
