@@ -25,7 +25,7 @@ variable "deployer_role_arn" {
 variable "rum_domain" {
   description = "Top-level domain used by CloudWatch RUM for the public site"
   type        = string
-  default     = "juiceco.io"
+  default     = "juicetech.io"
 }
 
 variable "rum_session_sample_rate" {

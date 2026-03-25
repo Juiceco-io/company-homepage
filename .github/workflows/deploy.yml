@@ -103,11 +103,18 @@ jobs:
 
       - name: Terraform Plan
         working-directory: ${{ env.TF_DIR }}
-        run: terraform plan -var="deployer_role_arn=${{ needs.set-environment.outputs.deployer_role }}" -out=tfplan
+        run: |
+          terraform plan \
+            -var="environment=${{ needs.set-environment.outputs.environment }}" \
+            -var="deployer_role_arn=${{ needs.set-environment.outputs.deployer_role }}" \
+            -out=tfplan
 
       - name: Terraform Apply
         working-directory: ${{ env.TF_DIR }}
-        run: terraform apply -auto-approve -var="deployer_role_arn=${{ needs.set-environment.outputs.deployer_role }}"
+        run: |
+          terraform apply -auto-approve \
+            -var="environment=${{ needs.set-environment.outputs.environment }}" \
+            -var="deployer_role_arn=${{ needs.set-environment.outputs.deployer_role }}"
 
       - name: Get Terraform Outputs
         id: tf-output
