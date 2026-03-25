@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import Observability from "@/components/Observability";
 
 // Self-hosted via next/font — no external CDN requests
 const inter = Inter({
@@ -100,6 +101,7 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-background text-text-primary min-h-screen flex flex-col font-sans antialiased">
+        <Observability />
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
