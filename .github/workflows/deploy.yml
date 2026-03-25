@@ -46,17 +46,17 @@ jobs:
             dev)
               echo "account_id=680666325340" >> $GITHUB_OUTPUT
               echo "deployer_role=arn:aws:iam::680666325340:role/github-actions-deployer" >> $GITHUB_OUTPUT
-              echo "cloudfront_aliases=[]" >> $GITHUB_OUTPUT
+              echo 'cloudfront_aliases_json=[]' >> $GITHUB_OUTPUT
               ;;
             qa)
               echo "account_id=944884338542" >> $GITHUB_OUTPUT
               echo "deployer_role=arn:aws:iam::944884338542:role/github-actions-deployer" >> $GITHUB_OUTPUT
-              echo "cloudfront_aliases=[]" >> $GITHUB_OUTPUT
+              echo 'cloudfront_aliases_json=[]' >> $GITHUB_OUTPUT
               ;;
             main)
               echo "account_id=718417033936" >> $GITHUB_OUTPUT
               echo "deployer_role=arn:aws:iam::718417033936:role/github-actions-deployer" >> $GITHUB_OUTPUT
-              echo "cloudfront_aliases=[\"juicetech.io\",\"www.juicetech.io\"]" >> $GITHUB_OUTPUT
+              echo 'cloudfront_aliases_json=["juicetech.io","www.juicetech.io"]' >> $GITHUB_OUTPUT
               ;;
           esac
           echo "state_role=arn:aws:iam::389813258758:role/github-actions-terraform-state" >> $GITHUB_OUTPUT
@@ -110,7 +110,7 @@ jobs:
           terraform plan \
             -var="environment=${{ needs.set-environment.outputs.environment }}" \
             -var="deployer_role_arn=${{ needs.set-environment.outputs.deployer_role }}" \
-            -var='cloudfront_aliases=${{ needs.set-environment.outputs.cloudfront_aliases }}' \
+            -var='cloudfront_aliases=${{ needs.set-environment.outputs.cloudfront_aliases_json }}' \
             -out=tfplan
 
       - name: Terraform Apply
@@ -119,7 +119,7 @@ jobs:
           terraform apply -auto-approve \
             -var="environment=${{ needs.set-environment.outputs.environment }}" \
             -var="deployer_role_arn=${{ needs.set-environment.outputs.deployer_role }}" \
-            -var='cloudfront_aliases=${{ needs.set-environment.outputs.cloudfront_aliases }}'
+            -var='cloudfront_aliases=${{ needs.set-environment.outputs.cloudfront_aliases_json }}'
 
       - name: Get Terraform Outputs
         id: tf-output
