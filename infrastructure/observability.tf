@@ -58,7 +58,7 @@ resource "aws_rum_app_monitor" "homepage" {
   name   = "${var.project}-${var.environment}"
   domain = var.rum_domain
 
-  cw_log_enabled = true
+  cw_log_enabled = false
 
   app_monitor_configuration {
     allow_cookies       = true
