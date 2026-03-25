@@ -26,8 +26,6 @@ resource "aws_cloudfront_response_headers_policy" "security_headers" {
       override     = true
     }
 
-    # SECURITY: X-XSS-Protection is deprecated in modern browsers but included for legacy compat.
-    # Remove at prod promotion per Sentinel finding L-1.
     xss_protection {
       mode_block = true
       protection = true
@@ -39,9 +37,6 @@ resource "aws_cloudfront_response_headers_policy" "security_headers" {
       override        = true
     }
 
-    # SECURITY: unsafe-inline accepted for dev (Next.js hydration requirement).
-    # Google Fonts domains removed — fonts are self-hosted via next/font (Sentinel M-2).
-    # Must replace unsafe-inline with nonce-based CSP before prod (Sentinel M-1).
     content_security_policy {
       content_security_policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; frame-ancestors 'none'"
       override                = true
@@ -70,10 +65,10 @@ resource "aws_cloudfront_response_headers_policy" "security_headers" {
 }
 
 locals {
-  use_custom_domain     = length(var.cloudfront_aliases) > 0
-  certificate_issued    = local.use_custom_domain ? try(aws_acm_certificate.homepage[0].status, "") == "ISSUED" : false
-  effective_aliases     = local.certificate_issued ? var.cloudfront_aliases : []
-  effective_cert_arn    = local.certificate_issued ? aws_acm_certificate.homepage[0].arn : null
+  use_custom_domain  = length(var.cloudfront_aliases) > 0
+  certificate_issued = local.use_custom_domain ? try(aws_acm_certificate.homepage[0].status, "") == "ISSUED" : false
+  effective_aliases  = local.certificate_issued ? var.cloudfront_aliases : []
+  effective_cert_arn = local.certificate_issued ? aws_acm_certificate.homepage[0].arn : null
 }
 
 resource "aws_acm_certificate" "homepage" {
@@ -107,7 +102,7 @@ resource "aws_cloudfront_distribution" "homepage" {
     target_origin_id           = "S3-${local.bucket_name}"
     viewer_protocol_policy     = "redirect-to-https"
     compress                   = true
-    cache_policy_id            = "658327ea-f89d-4fab-a63d-7e88639e58f6" # CachingOptimized (managed)
+    cache_policy_id            = "658327ea-f89d-4fab-a63d-7e88639e58f6"
     response_headers_policy_id = aws_cloudfront_response_headers_policy.security_headers.id
   }
 
