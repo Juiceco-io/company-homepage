@@ -37,3 +37,18 @@ output "rum_region" {
   description = "AWS region for CloudWatch RUM"
   value       = var.aws_region
 }
+
+output "acm_certificate_arn" {
+  description = "ACM certificate ARN for CloudFront custom domain"
+  value       = local.use_custom_domain ? aws_acm_certificate.homepage[0].arn : ""
+}
+
+output "acm_validation_records" {
+  description = "DNS validation records required for ACM certificate issuance"
+  value = local.use_custom_domain ? [for dvo in aws_acm_certificate.homepage[0].domain_validation_options : {
+    domain_name  = dvo.domain_name
+    record_name  = dvo.resource_record_name
+    record_type  = dvo.resource_record_type
+    record_value = dvo.resource_record_value
+  }] : []
+}
