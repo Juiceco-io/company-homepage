@@ -69,12 +69,28 @@ resource "aws_cloudfront_response_headers_policy" "security_headers" {
   }
 }
 
+locals {
+  use_custom_domain = length(var.cloudfront_aliases) > 0
+}
+
+resource "aws_acm_certificate" "homepage" {
+  count                     = local.use_custom_domain ? 1 : 0
+  domain_name               = var.cloudfront_aliases[0]
+  subject_alternative_names = slice(var.cloudfront_aliases, 1, length(var.cloudfront_aliases))
+  validation_method         = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
 resource "aws_cloudfront_distribution" "homepage" {
   enabled             = true
   is_ipv6_enabled     = true
   default_root_object = "index.html"
   price_class         = "PriceClass_100"
   comment             = "${var.project}-${var.environment}"
+  aliases             = var.cloudfront_aliases
 
   origin {
     domain_name              = aws_s3_bucket.homepage.bucket_regional_domain_name
@@ -113,6 +129,9 @@ resource "aws_cloudfront_distribution" "homepage" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn            = local.use_custom_domain ? aws_acm_certificate.homepage[0].arn : null
+    cloudfront_default_certificate = local.use_custom_domain ? false : true
+    ssl_support_method             = local.use_custom_domain ? "sni-only" : null
+    minimum_protocol_version       = local.use_custom_domain ? "TLSv1.2_2021" : null
   }
 }

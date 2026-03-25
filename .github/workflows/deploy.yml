@@ -25,6 +25,7 @@ jobs:
       account_id: ${{ steps.aws-config.outputs.account_id }}
       deployer_role: ${{ steps.aws-config.outputs.deployer_role }}
       state_role: ${{ steps.aws-config.outputs.state_role }}
+      cloudfront_aliases_json: ${{ steps.aws-config.outputs.cloudfront_aliases_json }}
     steps:
       - id: set-env
         name: Map branch → environment
@@ -46,14 +47,17 @@ jobs:
             dev)
               echo "account_id=680666325340" >> $GITHUB_OUTPUT
               echo "deployer_role=arn:aws:iam::680666325340:role/github-actions-deployer" >> $GITHUB_OUTPUT
+              echo 'cloudfront_aliases_json=[]' >> $GITHUB_OUTPUT
               ;;
             qa)
               echo "account_id=944884338542" >> $GITHUB_OUTPUT
               echo "deployer_role=arn:aws:iam::944884338542:role/github-actions-deployer" >> $GITHUB_OUTPUT
+              echo 'cloudfront_aliases_json=[]' >> $GITHUB_OUTPUT
               ;;
             main)
               echo "account_id=718417033936" >> $GITHUB_OUTPUT
               echo "deployer_role=arn:aws:iam::718417033936:role/github-actions-deployer" >> $GITHUB_OUTPUT
+              echo 'cloudfront_aliases_json=["juicetech.io","www.juicetech.io"]' >> $GITHUB_OUTPUT
               ;;
           esac
           echo "state_role=arn:aws:iam::389813258758:role/github-actions-terraform-state" >> $GITHUB_OUTPUT
@@ -70,22 +74,22 @@ jobs:
       cloudfront_distribution_id: ${{ steps.tf-output.outputs.cloudfront_distribution_id }}
       s3_bucket_name: ${{ steps.tf-output.outputs.s3_bucket_name }}
       cloudfront_domain_name: ${{ steps.tf-output.outputs.cloudfront_domain_name }}
+      rum_app_monitor_id: ${{ steps.tf-output.outputs.rum_app_monitor_id }}
+      rum_identity_pool_id: ${{ steps.tf-output.outputs.rum_identity_pool_id }}
+      rum_guest_role_arn: ${{ steps.tf-output.outputs.rum_guest_role_arn }}
+      rum_region: ${{ steps.tf-output.outputs.rum_region }}
 
     steps:
       - name: Checkout
-        # actions/checkout v4.2.2
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: Configure AWS credentials (Terraform state)
-        # aws-actions/configure-aws-credentials v4.0.2
-        # Use state_role (state account) — has access to the Terraform state bucket
         uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
         with:
           role-to-assume: ${{ needs.set-environment.outputs.state_role }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Setup Terraform
-        # hashicorp/setup-terraform v3.1.2
         uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd
         with:
           terraform_version: "~1.7"
@@ -99,11 +103,20 @@ jobs:
 
       - name: Terraform Plan
         working-directory: ${{ env.TF_DIR }}
-        run: terraform plan -var="deployer_role_arn=${{ needs.set-environment.outputs.deployer_role }}" -out=tfplan
+        run: |
+          terraform plan \
+            -var="environment=${{ needs.set-environment.outputs.environment }}" \
+            -var="deployer_role_arn=${{ needs.set-environment.outputs.deployer_role }}" \
+            -var='cloudfront_aliases=${{ needs.set-environment.outputs.cloudfront_aliases_json }}' \
+            -out=tfplan
 
       - name: Terraform Apply
         working-directory: ${{ env.TF_DIR }}
-        run: terraform apply -auto-approve -var="deployer_role_arn=${{ needs.set-environment.outputs.deployer_role }}"
+        run: |
+          terraform apply -auto-approve \
+            -var="environment=${{ needs.set-environment.outputs.environment }}" \
+            -var="deployer_role_arn=${{ needs.set-environment.outputs.deployer_role }}" \
+            -var='cloudfront_aliases=${{ needs.set-environment.outputs.cloudfront_aliases_json }}'
 
       - name: Get Terraform Outputs
         id: tf-output
@@ -112,9 +125,17 @@ jobs:
           CF_ID=$(terraform output -raw cloudfront_distribution_id)
           BUCKET=$(terraform output -raw s3_bucket_name)
           CF_DOMAIN=$(terraform output -raw cloudfront_domain_name)
+          RUM_MONITOR_ID=$(terraform output -raw rum_app_monitor_id)
+          RUM_IDENTITY_POOL_ID=$(terraform output -raw rum_identity_pool_id)
+          RUM_GUEST_ROLE_ARN=$(terraform output -raw rum_guest_role_arn)
+          RUM_REGION=$(terraform output -raw rum_region)
           echo "cloudfront_distribution_id=$CF_ID" >> "$GITHUB_OUTPUT"
           echo "s3_bucket_name=$BUCKET" >> "$GITHUB_OUTPUT"
           echo "cloudfront_domain_name=$CF_DOMAIN" >> "$GITHUB_OUTPUT"
+          echo "rum_app_monitor_id=$RUM_MONITOR_ID" >> "$GITHUB_OUTPUT"
+          echo "rum_identity_pool_id=$RUM_IDENTITY_POOL_ID" >> "$GITHUB_OUTPUT"
+          echo "rum_guest_role_arn=$RUM_GUEST_ROLE_ARN" >> "$GITHUB_OUTPUT"
+          echo "rum_region=$RUM_REGION" >> "$GITHUB_OUTPUT"
           echo "::notice title=CloudFront URL::$CF_DOMAIN"
 
   # ─────────────────────────────────────────────
@@ -129,14 +150,17 @@ jobs:
       CF_DISTRIBUTION_ID: ${{ needs.terraform-apply.outputs.cloudfront_distribution_id }}
       S3_BUCKET: ${{ needs.terraform-apply.outputs.s3_bucket_name }}
       IAM_ROLE: ${{ needs.set-environment.outputs.deployer_role }}
+      NEXT_PUBLIC_AWS_RUM_APP_MONITOR_ID: ${{ needs.terraform-apply.outputs.rum_app_monitor_id }}
+      NEXT_PUBLIC_AWS_RUM_IDENTITY_POOL_ID: ${{ needs.terraform-apply.outputs.rum_identity_pool_id }}
+      NEXT_PUBLIC_AWS_RUM_GUEST_ROLE_ARN: ${{ needs.terraform-apply.outputs.rum_guest_role_arn }}
+      NEXT_PUBLIC_AWS_RUM_REGION: ${{ needs.terraform-apply.outputs.rum_region }}
+      NEXT_PUBLIC_APP_VERSION: ${{ github.sha }}
 
     steps:
       - name: Checkout
-        # actions/checkout v4.2.2
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: Setup Node.js 20
-        # actions/setup-node v4.1.0
         uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af
         with:
           node-version: "20"
@@ -145,7 +169,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Sentinel M-4: Fail build on HIGH/CRITICAL vulnerabilities
       - name: Audit dependencies
         run: npm audit --audit-level=high
 
@@ -153,14 +176,11 @@ jobs:
         run: npm run build
 
       - name: Configure AWS credentials (Deploy)
-        # aws-actions/configure-aws-credentials v4.0.2
-        # Use deployer_role (environment-specific) — has access to the S3 bucket and CloudFront
         uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
         with:
           role-to-assume: ${{ env.IAM_ROLE }}
           aws-region: ${{ env.AWS_REGION }}
 
-      # Sync static assets (JS/CSS with content hashes) — long cache TTL
       - name: Sync static assets to S3
         run: |
           aws s3 sync ./out s3://${{ env.S3_BUCKET }} \
@@ -170,7 +190,6 @@ jobs:
             --exclude "*.json" \
             --exclude "*.txt"
 
-      # Sync HTML and manifests — short TTL so updates propagate after CF invalidation
       - name: Sync HTML and manifests to S3
         run: |
           aws s3 sync ./out s3://${{ env.S3_BUCKET }} \
