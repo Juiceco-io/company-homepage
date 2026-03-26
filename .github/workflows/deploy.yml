@@ -78,6 +78,7 @@ jobs:
       rum_identity_pool_id: ${{ steps.tf-output.outputs.rum_identity_pool_id }}
       rum_guest_role_arn: ${{ steps.tf-output.outputs.rum_guest_role_arn }}
       rum_region: ${{ steps.tf-output.outputs.rum_region }}
+      contact_api_url: ${{ steps.tf-output.outputs.contact_api_url }}
 
     steps:
       - name: Checkout
@@ -129,6 +130,7 @@ jobs:
           RUM_IDENTITY_POOL_ID=$(terraform output -raw rum_identity_pool_id)
           RUM_GUEST_ROLE_ARN=$(terraform output -raw rum_guest_role_arn)
           RUM_REGION=$(terraform output -raw rum_region)
+          CONTACT_API_URL=$(terraform output -raw contact_api_url)
           echo "cloudfront_distribution_id=$CF_ID" >> "$GITHUB_OUTPUT"
           echo "s3_bucket_name=$BUCKET" >> "$GITHUB_OUTPUT"
           echo "cloudfront_domain_name=$CF_DOMAIN" >> "$GITHUB_OUTPUT"
@@ -136,6 +138,7 @@ jobs:
           echo "rum_identity_pool_id=$RUM_IDENTITY_POOL_ID" >> "$GITHUB_OUTPUT"
           echo "rum_guest_role_arn=$RUM_GUEST_ROLE_ARN" >> "$GITHUB_OUTPUT"
           echo "rum_region=$RUM_REGION" >> "$GITHUB_OUTPUT"
+          echo "contact_api_url=$CONTACT_API_URL" >> "$GITHUB_OUTPUT"
           echo "::notice title=CloudFront URL::$CF_DOMAIN"
 
   # ─────────────────────────────────────────────
@@ -155,6 +158,7 @@ jobs:
       NEXT_PUBLIC_AWS_RUM_GUEST_ROLE_ARN: ${{ needs.terraform-apply.outputs.rum_guest_role_arn }}
       NEXT_PUBLIC_AWS_RUM_REGION: ${{ needs.terraform-apply.outputs.rum_region }}
       NEXT_PUBLIC_APP_VERSION: ${{ github.sha }}
+      NEXT_PUBLIC_CONTACT_API_URL: ${{ needs.terraform-apply.outputs.contact_api_url }}
 
     steps:
       - name: Checkout

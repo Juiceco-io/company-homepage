@@ -52,3 +52,37 @@ output "acm_validation_records" {
     record_value = dvo.resource_record_value
   }] : []
 }
+
+
+output "contact_api_url" {
+  description = "Public API endpoint for the contact form"
+  value       = "${aws_apigatewayv2_api.contact_form.api_endpoint}/contact"
+}
+
+output "contact_allowed_origins" {
+  description = "Allowed CORS origins for the contact form API"
+  value       = local.contact_allowed_origins
+}
+
+output "ses_domain_identity_verification_token" {
+  description = "TXT token required to verify the SES domain identity"
+  value       = aws_ses_domain_identity.contact.verification_token
+}
+
+output "ses_verification_records" {
+  description = "DNS records required to verify SES sending for the contact form domain"
+  value = concat(
+    [
+      {
+        type  = "TXT"
+        name  = "_amazonses.${var.contact_email_domain}"
+        value = aws_ses_domain_identity.contact.verification_token
+      }
+    ],
+    [for token in aws_ses_domain_dkim.contact.dkim_tokens : {
+      type  = "CNAME"
+      name  = "${token}._domainkey.${var.contact_email_domain}"
+      value = "${token}.dkim.amazonses.com"
+    }]
+  )
+}
