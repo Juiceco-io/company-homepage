@@ -39,3 +39,34 @@ variable "rum_session_sample_rate" {
   type        = number
   default     = 0.25
 }
+
+
+variable "contact_email_domain" {
+  description = "SES-verified domain used to send contact form email"
+  type        = string
+  default     = "juicetech.io"
+}
+
+variable "contact_from_email" {
+  description = "From address used by the contact form Lambda"
+  type        = string
+  default     = "contact@juicetech.io"
+}
+
+variable "contact_to_email" {
+  description = "Destination address for contact form submissions"
+  type        = string
+  default     = "mark@juiceco.io"
+}
+
+variable "contact_site_name" {
+  description = "Human-friendly site name used in contact form emails"
+  type        = string
+  default     = "Juicetech.io"
+}
+
+variable "contact_allowed_origins" {
+  description = "Additional allowed origins for the contact form API CORS policy"
+  type        = list(string)
+  default     = []
+}
