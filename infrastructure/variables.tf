@@ -54,9 +54,8 @@ variable "contact_from_email" {
 }
 
 variable "contact_to_email" {
-  description = "Destination address for contact form submissions"
+  description = "Destination address for contact form submissions (set via TF_VAR_contact_to_email or -var flag)"
   type        = string
-  default     = "mark@juiceco.io"
 }
 
 variable "contact_site_name" {
