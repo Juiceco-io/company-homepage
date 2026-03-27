@@ -43,7 +43,7 @@ variable "rum_session_sample_rate" {
 variable "contact_email_domain" {
   description = "SES-verified domain used to send contact form email"
   type        = string
-  default     = "juicetech.io"
+  default     = "juiceco.io"
 }
 
 variable "contact_from_email" {
@@ -59,7 +59,7 @@ variable "contact_to_email" {
 variable "contact_site_name" {
   description = "Human-friendly site name used in contact form emails"
   type        = string
-  default     = "Juicetech.io"
+  default     = "Juiceco.io"
 }
 
 variable "contact_allowed_origins" {
