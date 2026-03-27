@@ -117,15 +117,7 @@ jobs:
 
       - name: Terraform Apply
         working-directory: ${{ env.TF_DIR }}
-        env:
-          TF_VAR_contact_from_email: ${{ vars.CONTACT_FROM_EMAIL }}
-          TF_VAR_contact_to_email: ${{ vars.CONTACT_TO_EMAIL }}
-          TF_VAR_contact_email_domain: ${{ vars.CONTACT_EMAIL_DOMAIN }}
-        run: |
-          terraform apply -auto-approve \
-            -var="environment=${{ needs.set-environment.outputs.environment }}" \
-            -var="deployer_role_arn=${{ needs.set-environment.outputs.deployer_role }}" \
-            -var='cloudfront_aliases=${{ needs.set-environment.outputs.cloudfront_aliases_json }}'
+        run: terraform apply -auto-approve tfplan
 
       - name: Get Terraform Outputs
         id: tf-output
