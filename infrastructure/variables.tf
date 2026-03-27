@@ -40,7 +40,6 @@ variable "rum_session_sample_rate" {
   default     = 0.25
 }
 
-
 variable "contact_email_domain" {
   description = "SES-verified domain used to send contact form email"
   type        = string
