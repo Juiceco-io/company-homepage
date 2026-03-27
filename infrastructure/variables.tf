@@ -40,7 +40,6 @@ variable "rum_session_sample_rate" {
   default     = 0.25
 }
 
-
 variable "contact_email_domain" {
   description = "SES-verified domain used to send contact form email"
   type        = string
@@ -48,15 +47,13 @@ variable "contact_email_domain" {
 }
 
 variable "contact_from_email" {
-  description = "From address used by the contact form Lambda"
+  description = "From address used by the contact form Lambda (set via TF_VAR_contact_from_email or -var flag)"
   type        = string
-  default     = "contact@juicetech.io"
 }
 
 variable "contact_to_email" {
-  description = "Destination address for contact form submissions"
+  description = "Destination address for contact form submissions (set via TF_VAR_contact_to_email or -var flag)"
   type        = string
-  default     = "mark@juiceco.io"
 }
 
 variable "contact_site_name" {
