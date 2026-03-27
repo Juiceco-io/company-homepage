@@ -41,9 +41,8 @@ variable "rum_session_sample_rate" {
 }
 
 variable "contact_email_domain" {
-  description = "SES-verified domain used to send contact form email"
+  description = "SES-verified domain used to send contact form email (set via TF_VAR_contact_email_domain or -var flag)"
   type        = string
-  default     = "juiceco.io"
 }
 
 variable "contact_from_email" {
