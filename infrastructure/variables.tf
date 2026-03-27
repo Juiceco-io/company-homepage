@@ -58,7 +58,7 @@ variable "contact_to_email" {
 variable "contact_site_name" {
   description = "Human-friendly site name used in contact form emails"
   type        = string
-  default     = "Juicetech.io"
+  default     = "Juiceco.io"
 }
 
 variable "contact_allowed_origins" {
