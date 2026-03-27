@@ -48,9 +48,8 @@ variable "contact_email_domain" {
 }
 
 variable "contact_from_email" {
-  description = "From address used by the contact form Lambda"
+  description = "From address used by the contact form Lambda (set via TF_VAR_contact_from_email or -var flag)"
   type        = string
-  default     = "contact@juicetech.io"
 }
 
 variable "contact_to_email" {

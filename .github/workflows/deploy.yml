@@ -105,6 +105,7 @@ jobs:
       - name: Terraform Plan
         working-directory: ${{ env.TF_DIR }}
         env:
+          TF_VAR_contact_from_email: ${{ vars.CONTACT_FROM_EMAIL }}
           TF_VAR_contact_to_email: ${{ vars.CONTACT_TO_EMAIL }}
         run: |
           terraform plan \
@@ -116,6 +117,7 @@ jobs:
       - name: Terraform Apply
         working-directory: ${{ env.TF_DIR }}
         env:
+          TF_VAR_contact_from_email: ${{ vars.CONTACT_FROM_EMAIL }}
           TF_VAR_contact_to_email: ${{ vars.CONTACT_TO_EMAIL }}
         run: |
           terraform apply -auto-approve \
