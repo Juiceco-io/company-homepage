@@ -102,6 +102,17 @@ jobs:
           terraform init \
             -backend-config="key=company-homepage/${{ needs.set-environment.outputs.environment }}/terraform.tfstate"
 
+      # One-time remediation: clear any stale SES state entries that may exist
+      # without a corresponding AWS resource (state drift). Idempotent — safe
+      # to run every deploy; terraform state rm exits 0 even if the resource
+      # is already absent from state.
+      - name: Remove stale SES state (idempotent)
+        working-directory: ${{ env.TF_DIR }}
+        run: |
+          terraform state rm aws_ses_domain_identity.contact || true
+          terraform state rm aws_ses_domain_dkim.contact     || true
+          terraform state rm terraform_data.ses_domain_key   || true
+
       - name: Terraform Plan
         working-directory: ${{ env.TF_DIR }}
         env:
