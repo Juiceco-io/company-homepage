@@ -17,12 +17,27 @@ data "archive_file" "contact_form_lambda" {
   output_path = "${path.module}/.terraform/contact-form-lambda.zip"
 }
 
+# This resource acts as a replacement trigger: if contact_email_domain changes,
+# terraform_data changes, which forces aws_ses_domain_identity and aws_ses_domain_dkim
+# to be destroyed and re-created (new domain = new identity).
+resource "terraform_data" "ses_domain_key" {
+  input = var.contact_email_domain
+}
+
 resource "aws_ses_domain_identity" "contact" {
   domain = var.contact_email_domain
+
+  lifecycle {
+    replace_triggered_by = [terraform_data.ses_domain_key]
+  }
 }
 
 resource "aws_ses_domain_dkim" "contact" {
   domain = aws_ses_domain_identity.contact.domain
+
+  lifecycle {
+    replace_triggered_by = [terraform_data.ses_domain_key]
+  }
 }
 
 resource "aws_iam_role" "contact_form_lambda" {
