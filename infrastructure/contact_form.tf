@@ -77,7 +77,13 @@ resource "aws_iam_role_policy" "contact_form_lambda" {
           "ses:SendEmail",
           "ses:SendRawEmail"
         ]
-        Resource = aws_ses_domain_identity.contact.arn
+        # Grant access to the verified domain identity and any email address
+        # identities under the same account/region. The domain identity ARN alone
+        # is insufficient when SES v2 resolves the sender's identity at call time.
+        Resource = [
+          aws_ses_domain_identity.contact.arn,
+          "arn:aws:ses:${var.aws_region}:${data.aws_caller_identity.current.account_id}:identity/*",
+        ]
       }
     ]
   })
