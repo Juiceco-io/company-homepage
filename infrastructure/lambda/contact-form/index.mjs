@@ -34,7 +34,7 @@ export const handler = async (event) => {
       return json(400, { error: "Please enter a valid email address." });
     }
 
-    await ses.send(new SendEmailCommand({
+    const sesResponse = await ses.send(new SendEmailCommand({
       FromEmailAddress: process.env.CONTACT_FROM_EMAIL,
       Destination: {
         ToAddresses: [process.env.CONTACT_TO_EMAIL],
@@ -71,9 +71,15 @@ export const handler = async (event) => {
       },
     }));
 
+    console.log("contact-form sent", { messageId: sesResponse.MessageId });
     return json(200, { ok: true });
   } catch (error) {
-    console.error("contact-form error", error);
+    console.error("contact-form error", {
+      name: error.name,
+      message: error.message,
+      code: error.$metadata?.httpStatusCode,
+      requestId: error.$metadata?.requestId,
+    });
     return json(500, { error: "Unable to send your message right now. Please try again later." });
   }
 };
