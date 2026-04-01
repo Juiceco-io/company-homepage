@@ -28,7 +28,7 @@ export default function Navbar() {
           {/* Logo + Wordmark */}
           <Link
             href="/"
-            className="logo-wrap flex items-center gap-2.5 hover:opacity-90 transition-opacity duration-200"
+            className="logo-wrap flex items-center gap-2.5"
           >
             <Logo size={36} className="logo-svg logo-load-anim" />
             <span className="text-orange-500 font-bold text-xl tracking-tight">Juice Technology Solutions</span>
