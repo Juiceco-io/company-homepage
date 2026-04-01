@@ -71,7 +71,11 @@ export const handler = async (event) => {
       },
     }));
 
-    console.log("contact-form sent", { messageId: sesResponse.MessageId });
+    console.log("contact-form sent", {
+      from: process.env.CONTACT_FROM_EMAIL,
+      to: process.env.CONTACT_TO_EMAIL,
+      messageId: sesResponse.MessageId,
+    });
     return json(200, { ok: true });
   } catch (error) {
     console.error("contact-form error", {
