@@ -32,7 +32,7 @@ export default function Logo({ size = 40, className = "" }: LogoProps) {
       {/* Outer circle fill */}
       <circle cx={cx} cy={cy} r={r} fill="#F97316" stroke="#EA580C" strokeWidth="2" />
 
-      {/* Segment lines */}
+      {/* Segment lines — thickened from 1.2 → 2.0 */}
       {segments.map((seg, i) => (
         <line
           key={i}
@@ -41,7 +41,7 @@ export default function Logo({ size = 40, className = "" }: LogoProps) {
           x2={seg.x2}
           y2={seg.y2}
           stroke="#FB923C"
-          strokeWidth="1.2"
+          strokeWidth="2.0"
           opacity="0.7"
         />
       ))}
