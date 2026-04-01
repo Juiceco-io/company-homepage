@@ -1,11 +1,30 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
-  <!-- Outer circle -->
-  <circle cx="20" cy="20" r="19" fill="#F97316" stroke="#EA580C" stroke-width="1.5"/>
-  <!-- Inner circle -->
-  <circle cx="20" cy="20" r="10" fill="#FB923C"/>
-  <!-- Segment lines radiating from center -->
-  <line x1="20" y1="1" x2="20" y2="39" stroke="#EA580C" stroke-width="1" opacity="0.6"/>
-  <line x1="1" y1="20" x2="39" y2="20" stroke="#EA580C" stroke-width="1" opacity="0.6"/>
-  <line x1="6.5" y1="6.5" x2="33.5" y2="33.5" stroke="#EA580C" stroke-width="1" opacity="0.6"/>
-  <line x1="33.5" y1="6.5" x2="6.5" y2="33.5" stroke="#EA580C" stroke-width="1" opacity="0.6"/>
+  <!-- Rind (outer ring) -->
+  <circle cx="20" cy="20" r="19" fill="#F97316" />
+  <!-- Segment flesh area background -->
+  <circle cx="20" cy="20" r="15" fill="#FED7AA" />
+  <!-- Segments (alternating light/medium) -->
+  <path d="M 20.000 17.000 L 20.000 5.000 A 15 15 0 0 1 30.607 9.393 L 22.121 17.879 A 3 3 0 0 0 20.000 17.000 Z" fill="#FED7AA" />
+  <path d="M 22.121 17.879 L 30.607 9.393 A 15 15 0 0 1 35.000 20.000 L 23.000 20.000 A 3 3 0 0 0 22.121 17.879 Z" fill="#FDBA74" />
+  <path d="M 23.000 20.000 L 35.000 20.000 A 15 15 0 0 1 30.607 30.607 L 22.121 22.121 A 3 3 0 0 0 23.000 20.000 Z" fill="#FED7AA" />
+  <path d="M 22.121 22.121 L 30.607 30.607 A 15 15 0 0 1 20.000 35.000 L 20.000 23.000 A 3 3 0 0 0 22.121 22.121 Z" fill="#FDBA74" />
+  <path d="M 20.000 23.000 L 20.000 35.000 A 15 15 0 0 1 9.393 30.607 L 17.879 22.121 A 3 3 0 0 0 20.000 23.000 Z" fill="#FED7AA" />
+  <path d="M 17.879 22.121 L 9.393 30.607 A 15 15 0 0 1 5.000 20.000 L 17.000 20.000 A 3 3 0 0 0 17.879 22.121 Z" fill="#FDBA74" />
+  <path d="M 17.000 20.000 L 5.000 20.000 A 15 15 0 0 1 9.393 9.393 L 17.879 17.879 A 3 3 0 0 0 17.000 20.000 Z" fill="#FED7AA" />
+  <path d="M 17.879 17.879 L 9.393 9.393 A 15 15 0 0 1 20.000 5.000 L 20.000 17.000 A 3 3 0 0 0 17.879 17.879 Z" fill="#FDBA74" />
+  <!-- Segment dividers -->
+  <line x1="20" y1="17" x2="20" y2="5" stroke="#EA580C" stroke-width="1.2" />
+  <line x1="22.121" y1="17.879" x2="30.607" y2="9.393" stroke="#EA580C" stroke-width="1.2" />
+  <line x1="23" y1="20" x2="35" y2="20" stroke="#EA580C" stroke-width="1.2" />
+  <line x1="22.121" y1="22.121" x2="30.607" y2="30.607" stroke="#EA580C" stroke-width="1.2" />
+  <line x1="20" y1="23" x2="20" y2="35" stroke="#EA580C" stroke-width="1.2" />
+  <line x1="17.879" y1="22.121" x2="9.393" y2="30.607" stroke="#EA580C" stroke-width="1.2" />
+  <line x1="17" y1="20" x2="5" y2="20" stroke="#EA580C" stroke-width="1.2" />
+  <line x1="17.879" y1="17.879" x2="9.393" y2="9.393" stroke="#EA580C" stroke-width="1.2" />
+  <!-- Center pip -->
+  <circle cx="20" cy="20" r="3" fill="#F97316" />
+  <!-- Rind inner edge ring -->
+  <circle cx="20" cy="20" r="15" fill="none" stroke="#EA580C" stroke-width="1" />
+  <!-- Outer rind stroke -->
+  <circle cx="20" cy="20" r="19" fill="none" stroke="#C2410C" stroke-width="1" />
 </svg>
