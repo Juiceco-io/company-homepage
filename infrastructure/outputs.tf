@@ -69,6 +69,22 @@ output "ses_domain_identity_verification_token" {
   value       = aws_ses_domain_identity.contact.verification_token
 }
 
+output "ses_mail_from_records" {
+  description = "DNS records required for the custom MAIL FROM domain (must be created before SES will use it)"
+  value = [
+    {
+      type  = "MX"
+      name  = aws_ses_domain_mail_from.contact.mail_from_domain
+      value = "10 feedback-smtp.${var.aws_region}.amazonses.com"
+    },
+    {
+      type  = "TXT"
+      name  = aws_ses_domain_mail_from.contact.mail_from_domain
+      value = "v=spf1 include:amazonses.com ~all"
+    }
+  ]
+}
+
 output "ses_verification_records" {
   description = "DNS records required to verify SES sending for the contact form domain"
   value = concat(

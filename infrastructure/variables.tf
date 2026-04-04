@@ -61,6 +61,12 @@ variable "contact_site_name" {
   default     = "Juiceco.io"
 }
 
+variable "ses_mail_from_subdomain" {
+  description = "Subdomain used as the custom MAIL FROM domain for SES (e.g. 'mail' yields mail.<contact_email_domain>)"
+  type        = string
+  default     = "mail"
+}
+
 variable "contact_allowed_origins" {
   description = "Additional allowed origins for the contact form API CORS policy"
   type        = list(string)
