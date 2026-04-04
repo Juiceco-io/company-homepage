@@ -40,6 +40,16 @@ resource "aws_ses_domain_dkim" "contact" {
   }
 }
 
+# Custom MAIL FROM domain — aligns the envelope sender with the verified domain
+# so SPF/DMARC checks pass on the bounce address, improving deliverability.
+resource "aws_ses_domain_mail_from" "contact" {
+  domain           = aws_ses_domain_identity.contact.domain
+  mail_from_domain = "${var.ses_mail_from_subdomain}.${var.contact_email_domain}"
+
+  # If SES cannot reach the MX record it falls back to the default amazonses.com
+  # address. BehaviorOnMxFailure defaults to UseDefaultValue, which is safe.
+}
+
 resource "aws_iam_role" "contact_form_lambda" {
   name = "${var.project}-${var.environment}-contact-form-lambda"
 
