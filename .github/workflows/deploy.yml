@@ -57,7 +57,7 @@ jobs:
             main)
               echo "account_id=718417033936" >> $GITHUB_OUTPUT
               echo "deployer_role=arn:aws:iam::718417033936:role/github-actions-deployer" >> $GITHUB_OUTPUT
-              echo 'cloudfront_aliases_json=["juicetech.io","www.juicetech.io"]' >> $GITHUB_OUTPUT
+              echo 'cloudfront_aliases_json=["juiceco.io","www.juiceco.io","juicetech.io","www.juicetech.io"]' >> $GITHUB_OUTPUT
               ;;
           esac
           echo "state_role=arn:aws:iam::389813258758:role/github-actions-terraform-state" >> $GITHUB_OUTPUT
@@ -78,6 +78,7 @@ jobs:
       rum_identity_pool_id: ${{ steps.tf-output.outputs.rum_identity_pool_id }}
       rum_guest_role_arn: ${{ steps.tf-output.outputs.rum_guest_role_arn }}
       rum_region: ${{ steps.tf-output.outputs.rum_region }}
+      contact_api_url: ${{ steps.tf-output.outputs.contact_api_url }}
 
     steps:
       - name: Checkout
@@ -101,8 +102,23 @@ jobs:
           terraform init \
             -backend-config="key=company-homepage/${{ needs.set-environment.outputs.environment }}/terraform.tfstate"
 
+      # One-time remediation: clear any stale SES state entries that may exist
+      # without a corresponding AWS resource (state drift). Idempotent — safe
+      # to run every deploy; terraform state rm exits 0 even if the resource
+      # is already absent from state.
+      - name: Remove stale SES state (idempotent)
+        working-directory: ${{ env.TF_DIR }}
+        run: |
+          terraform state rm aws_ses_domain_identity.contact || true
+          terraform state rm aws_ses_domain_dkim.contact     || true
+          terraform state rm terraform_data.ses_domain_key   || true
+
       - name: Terraform Plan
         working-directory: ${{ env.TF_DIR }}
+        env:
+          TF_VAR_contact_from_email: ${{ vars.CONTACT_FROM_EMAIL }}
+          TF_VAR_contact_to_email: ${{ vars.CONTACT_TO_EMAIL }}
+          TF_VAR_contact_email_domain: ${{ vars.CONTACT_EMAIL_DOMAIN }}
         run: |
           terraform plan \
             -var="environment=${{ needs.set-environment.outputs.environment }}" \
@@ -112,11 +128,7 @@ jobs:
 
       - name: Terraform Apply
         working-directory: ${{ env.TF_DIR }}
-        run: |
-          terraform apply -auto-approve \
-            -var="environment=${{ needs.set-environment.outputs.environment }}" \
-            -var="deployer_role_arn=${{ needs.set-environment.outputs.deployer_role }}" \
-            -var='cloudfront_aliases=${{ needs.set-environment.outputs.cloudfront_aliases_json }}'
+        run: terraform apply -auto-approve tfplan
 
       - name: Get Terraform Outputs
         id: tf-output
@@ -129,6 +141,7 @@ jobs:
           RUM_IDENTITY_POOL_ID=$(terraform output -raw rum_identity_pool_id)
           RUM_GUEST_ROLE_ARN=$(terraform output -raw rum_guest_role_arn)
           RUM_REGION=$(terraform output -raw rum_region)
+          CONTACT_API_URL=$(terraform output -raw contact_api_url)
           echo "cloudfront_distribution_id=$CF_ID" >> "$GITHUB_OUTPUT"
           echo "s3_bucket_name=$BUCKET" >> "$GITHUB_OUTPUT"
           echo "cloudfront_domain_name=$CF_DOMAIN" >> "$GITHUB_OUTPUT"
@@ -136,6 +149,7 @@ jobs:
           echo "rum_identity_pool_id=$RUM_IDENTITY_POOL_ID" >> "$GITHUB_OUTPUT"
           echo "rum_guest_role_arn=$RUM_GUEST_ROLE_ARN" >> "$GITHUB_OUTPUT"
           echo "rum_region=$RUM_REGION" >> "$GITHUB_OUTPUT"
+          echo "contact_api_url=$CONTACT_API_URL" >> "$GITHUB_OUTPUT"
           echo "::notice title=CloudFront URL::$CF_DOMAIN"
 
   # ─────────────────────────────────────────────
@@ -155,6 +169,7 @@ jobs:
       NEXT_PUBLIC_AWS_RUM_GUEST_ROLE_ARN: ${{ needs.terraform-apply.outputs.rum_guest_role_arn }}
       NEXT_PUBLIC_AWS_RUM_REGION: ${{ needs.terraform-apply.outputs.rum_region }}
       NEXT_PUBLIC_APP_VERSION: ${{ github.sha }}
+      NEXT_PUBLIC_CONTACT_API_URL: ${{ needs.terraform-apply.outputs.contact_api_url }}
 
     steps:
       - name: Checkout

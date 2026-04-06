@@ -38,7 +38,7 @@ resource "aws_cloudfront_response_headers_policy" "security_headers" {
     }
 
     content_security_policy {
-      content_security_policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; frame-ancestors 'none'"
+      content_security_policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://*.execute-api.us-east-1.amazonaws.com; frame-ancestors 'none'"
       override                = true
     }
   }
@@ -104,6 +104,11 @@ resource "aws_cloudfront_distribution" "homepage" {
     compress                   = true
     cache_policy_id            = "658327ea-f89d-4fab-a63d-7e88639e58f6"
     response_headers_policy_id = aws_cloudfront_response_headers_policy.security_headers.id
+
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.rewrite_uri.arn
+    }
   }
 
   custom_error_response {
@@ -132,4 +137,12 @@ resource "aws_cloudfront_distribution" "homepage" {
     ssl_support_method             = local.certificate_issued ? "sni-only" : null
     minimum_protocol_version       = local.certificate_issued ? "TLSv1.2_2021" : null
   }
+}
+
+resource "aws_cloudfront_function" "rewrite_uri" {
+  name    = "${var.project}-${var.environment}-rewrite-uri"
+  runtime = "cloudfront-js-2.0"
+  comment = "Rewrite directory URIs to index.html for Next.js trailingSlash static export"
+  publish = true
+  code    = file("${path.module}/cloudfront_function.js")
 }
