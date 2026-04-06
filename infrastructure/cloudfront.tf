@@ -64,11 +64,29 @@ resource "aws_cloudfront_response_headers_policy" "security_headers" {
   }
 }
 
+# Look up the currently-ISSUED certificate by domain name.
+# This data source intentionally ignores the managed aws_acm_certificate resource's
+# transient status: during create_before_destroy certificate replacement the new cert
+# is PENDING_VALIDATION while the old cert is still ISSUED and serving traffic.
+# Reading .status off the managed resource at plan time sees the *new* (pending) cert
+# and would incorrectly set effective_aliases=[] / cloudfront_default_certificate=true,
+# dropping juicetech.io and serving the default CloudFront cert (ERR_CERT_COMMON_NAME_INVALID).
+# Using a data source filtered to statuses=["ISSUED"] always resolves the currently-live
+# cert, so CloudFront keeps the custom domain until the replacement is actually usable.
+data "aws_acm_certificate" "homepage_issued" {
+  count       = local.use_custom_domain ? 1 : 0
+  domain      = var.cloudfront_aliases[0]
+  statuses    = ["ISSUED"]
+  most_recent = true
+}
+
 locals {
   use_custom_domain  = length(var.cloudfront_aliases) > 0
-  certificate_issued = local.use_custom_domain ? try(aws_acm_certificate.homepage[0].status, "") == "ISSUED" : false
+  # try() returns null on first deploy (no cert issued yet) — bootstrapping is safe
+  _issued_cert_arn   = local.use_custom_domain ? try(data.aws_acm_certificate.homepage_issued[0].arn, null) : null
+  certificate_issued = local._issued_cert_arn != null
   effective_aliases  = local.certificate_issued ? var.cloudfront_aliases : []
-  effective_cert_arn = local.certificate_issued ? aws_acm_certificate.homepage[0].arn : null
+  effective_cert_arn = local._issued_cert_arn
 }
 
 resource "aws_acm_certificate" "homepage" {
