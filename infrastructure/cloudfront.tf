@@ -64,11 +64,57 @@ resource "aws_cloudfront_response_headers_policy" "security_headers" {
   }
 }
 
+# ---------------------------------------------------------------------------
+# Certificate lookup — recovery-safe against partial replacement state
+#
+# Problem: aws_acm_certificate.homepage[0].status during create_before_destroy
+# rotation reflects the NEW (PENDING_VALIDATION) cert, making certificate_issued=false
+# and causing CloudFront to drop aliases + fall back to the default CloudFront cert.
+#
+# In prod the state can be even messier: a deposed old cert (09c0f699...) alongside
+# a newer replacement cert, with neither being ISSUED at the moment of plan/apply.
+#
+# Strategy:
+#   1. Use a data source (not the managed resource) so we see ACM's real-time status.
+#   2. Accept both ISSUED and PENDING_VALIDATION so the data source never returns
+#      "empty result" when only a pending cert exists in ACM.
+#   3. Only set certificate_issued=true when the found cert is actually ISSUED —
+#      CloudFront rejects PENDING certs at update time anyway.
+#   4. Add ignore_changes on aliases + viewer_certificate so that when
+#      certificate_issued=false (pending window), Terraform leaves the live
+#      CloudFront config untouched instead of writing empty aliases / default cert.
+#
+# This means:
+#   • Normal steady-state: data source finds ISSUED cert → custom domain active.
+#   • Mid-rotation (old ISSUED exists): data source finds it → no disruption.
+#   • Broken prod state (no ISSUED cert): data source finds PENDING cert → locals
+#     compute effective_aliases=[] but ignore_changes prevents that write, so the
+#     distribution keeps serving on the custom domain as-is.
+#   • Post-rotation (new cert becomes ISSUED): next plan sees ISSUED → ignore_changes
+#     no longer suppresses the update → aliases and cert reconcile automatically.
+# ---------------------------------------------------------------------------
+
+data "aws_acm_certificate" "homepage_best" {
+  count       = local.use_custom_domain ? 1 : 0
+  domain      = var.cloudfront_aliases[0]
+  statuses    = ["ISSUED", "PENDING_VALIDATION"]
+  most_recent = true
+}
+
 locals {
-  use_custom_domain  = length(var.cloudfront_aliases) > 0
-  certificate_issued = local.use_custom_domain ? try(aws_acm_certificate.homepage[0].status, "") == "ISSUED" : false
+  use_custom_domain = length(var.cloudfront_aliases) > 0
+
+  # ARN and real-time status from ACM (null when no cert exists at all).
+  _best_cert_arn    = local.use_custom_domain ? try(data.aws_acm_certificate.homepage_best[0].arn, null) : null
+  _best_cert_status = local.use_custom_domain ? try(data.aws_acm_certificate.homepage_best[0].status, null) : null
+
+  # Only switch CloudFront to custom-domain mode once a cert is fully ISSUED.
+  # During the pending-validation window this stays false, but ignore_changes on
+  # the distribution prevents Terraform from actually writing the downgraded config.
+  certificate_issued = local._best_cert_arn != null && local._best_cert_status == "ISSUED"
+
   effective_aliases  = local.certificate_issued ? var.cloudfront_aliases : []
-  effective_cert_arn = local.certificate_issued ? aws_acm_certificate.homepage[0].arn : null
+  effective_cert_arn = local.certificate_issued ? local._best_cert_arn : null
 }
 
 resource "aws_acm_certificate" "homepage" {
@@ -136,6 +182,21 @@ resource "aws_cloudfront_distribution" "homepage" {
     cloudfront_default_certificate = local.certificate_issued ? false : true
     ssl_support_method             = local.certificate_issued ? "sni-only" : null
     minimum_protocol_version       = local.certificate_issued ? "TLSv1.2_2021" : null
+  }
+
+  lifecycle {
+    # During cert rotation (certificate_issued=false), the locals compute
+    # effective_aliases=[] and effective_cert_arn=null, which would drop the
+    # custom domain and fall back to the default CloudFront certificate.
+    # ignore_changes prevents Terraform from writing that downgraded config
+    # while we wait for DNS validation to complete.
+    # Once the replacement cert becomes ISSUED, certificate_issued flips to true,
+    # and the ignore_changes suppression no longer applies (Terraform sees the
+    # desired values matching actuals) — aliases and cert auto-reconcile.
+    ignore_changes = [
+      aliases,
+      viewer_certificate,
+    ]
   }
 }
 
