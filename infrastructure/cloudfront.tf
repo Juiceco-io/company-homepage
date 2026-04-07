@@ -64,29 +64,40 @@ resource "aws_cloudfront_response_headers_policy" "security_headers" {
   }
 }
 
-# Look up the currently-ISSUED certificate by domain name.
-# This data source intentionally ignores the managed aws_acm_certificate resource's
-# transient status: during create_before_destroy certificate replacement the new cert
-# is PENDING_VALIDATION while the old cert is still ISSUED and serving traffic.
-# Reading .status off the managed resource at plan time sees the *new* (pending) cert
-# and would incorrectly set effective_aliases=[] / cloudfront_default_certificate=true,
-# dropping juicetech.io and serving the default CloudFront cert (ERR_CERT_COMMON_NAME_INVALID).
-# Using a data source filtered to statuses=["ISSUED"] always resolves the currently-live
-# cert, so CloudFront keeps the custom domain until the replacement is actually usable.
-data "aws_acm_certificate" "homepage_issued" {
+# Certificate lookup — recovery-safe against partial replacement state.
+#
+# During create_before_destroy certificate rotation, the managed ACM resource can
+# point at a new PENDING_VALIDATION cert while the old cert is still serving (or
+# has become a deposed object in state). If Terraform derives CloudFront aliases
+# and viewer_certificate directly from that managed resource, it can incorrectly
+# drop the custom domain and fall back to the default CloudFront certificate.
+#
+# Strategy:
+# - Look up the best available ACM certificate from ACM itself, not just the
+#   in-flight managed resource instance.
+# - Accept ISSUED and PENDING_VALIDATION so the lookup does not fail in broken
+#   transition states where no currently-issued cert is visible via the managed
+#   resource path.
+# - Only treat the certificate as usable for CloudFront when its real-time ACM
+#   status is ISSUED.
+# - Protect aliases/viewer_certificate from being downgraded during the pending
+#   window via ignore_changes on the distribution.
+data "aws_acm_certificate" "homepage_best" {
   count       = local.use_custom_domain ? 1 : 0
   domain      = var.cloudfront_aliases[0]
-  statuses    = ["ISSUED"]
+  statuses    = ["ISSUED", "PENDING_VALIDATION"]
   most_recent = true
 }
 
 locals {
-  use_custom_domain  = length(var.cloudfront_aliases) > 0
-  # try() returns null on first deploy (no cert issued yet) — bootstrapping is safe
-  _issued_cert_arn   = local.use_custom_domain ? try(data.aws_acm_certificate.homepage_issued[0].arn, null) : null
-  certificate_issued = local._issued_cert_arn != null
+  use_custom_domain = length(var.cloudfront_aliases) > 0
+
+  best_cert_arn    = local.use_custom_domain ? try(data.aws_acm_certificate.homepage_best[0].arn, null) : null
+  best_cert_status = local.use_custom_domain ? try(data.aws_acm_certificate.homepage_best[0].status, null) : null
+
+  certificate_issued = local.best_cert_arn != null && local.best_cert_status == "ISSUED"
   effective_aliases  = local.certificate_issued ? var.cloudfront_aliases : []
-  effective_cert_arn = local._issued_cert_arn
+  effective_cert_arn = local.certificate_issued ? local.best_cert_arn : null
 }
 
 resource "aws_acm_certificate" "homepage" {
@@ -154,6 +165,17 @@ resource "aws_cloudfront_distribution" "homepage" {
     cloudfront_default_certificate = local.certificate_issued ? false : true
     ssl_support_method             = local.certificate_issued ? "sni-only" : null
     minimum_protocol_version       = local.certificate_issued ? "TLSv1.2_2021" : null
+  }
+
+  lifecycle {
+    # While the replacement certificate is still pending, never let Terraform
+    # write a downgraded distribution config that strips aliases or falls back
+    # to the default CloudFront certificate. Keep the live config in place until
+    # ACM has a genuinely ISSUED cert available.
+    ignore_changes = [
+      aliases,
+      viewer_certificate,
+    ]
   }
 }
 
