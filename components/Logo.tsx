@@ -7,8 +7,9 @@ export default function Logo({ size = 40, className = "" }: LogoProps) {
   const cx = size / 2;
   const cy = size / 2;
   const rOuter = size / 2 - 1;
-  const rFlesh = rOuter * 0.79;
-  const rPip = rOuter * 0.16;
+  const rindWidth = size * 0.085;
+  const rFlesh = rOuter - rindWidth;
+  const rPip = rOuter * 0.24;
   const n = 8;
   const rotate = -Math.PI / 2;
 
@@ -52,10 +53,10 @@ export default function Logo({ size = 40, className = "" }: LogoProps) {
       className={className}
       aria-label="Juice Technology Solutions logo"
     >
-      <circle cx={cx} cy={cy} r={rOuter} fill="#FF7A00" />
+      <circle cx={cx} cy={cy} r={rOuter} fill="#F97316" />
 
       {segments.map((d, i) => (
-        <path key={i} d={d} fill="#FFFFFF" />
+        <path key={i} d={d} fill="#FDBA74" />
       ))}
 
       {dividers.map((div, i) => (
@@ -65,14 +66,14 @@ export default function Logo({ size = 40, className = "" }: LogoProps) {
           y1={div.y1}
           x2={div.x2}
           y2={div.y2}
-          stroke="#FFFFFF"
-          strokeWidth={size * 0.05}
+          stroke="#F97316"
+          strokeWidth={size * 0.04}
           strokeLinecap="round"
         />
       ))}
 
-      <circle cx={cx} cy={cy} r={rFlesh} fill="none" stroke="#FFFFFF" strokeWidth={size * 0.045} />
-      <circle cx={cx} cy={cy} r={rPip} fill="#FFFFFF" />
+      <circle cx={cx} cy={cy} r={rFlesh} fill="none" stroke="#F97316" strokeWidth={size * 0.032} />
+      <circle cx={cx} cy={cy} r={rPip} fill="#FFEDD5" />
     </svg>
   );
 }
