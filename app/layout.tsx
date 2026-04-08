@@ -67,7 +67,10 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/Juice_Logo.svg", type: "image/svg+xml" },
     ],
+    apple: [{ url: "/Juice_Logo.svg" }],
+    shortcut: ["/favicon.svg"],
   },
 };
 
@@ -76,7 +79,7 @@ const jsonLd = {
   "@type": "Organization",
   name: "Juice Technology Solutions",
   url: "https://juiceco.io",
-  logo: "https://juiceco.io/logo.png",
+  logo: "https://juiceco.io/Juice_Logo.svg",
   description:
     "Custom software development agency. We partner with companies to design, build, and ship web apps, mobile products, and internal tools — fast.",
   contactPoint: {
