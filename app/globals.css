@@ -221,7 +221,8 @@ body {
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
 }
-.logo-wrap:hover .logo-svg {
+.logo-wrap:hover .logo-svg,
+.logo-wrap:hover img.logo-svg {
   animation: logo-hover-spin 0.6s ease-in-out;
 }
 
