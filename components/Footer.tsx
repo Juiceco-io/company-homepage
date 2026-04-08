@@ -1,5 +1,5 @@
+import Image from "next/image";
 import Link from "next/link";
-import Logo from "./Logo";
 
 const footerLinks = [
   { href: "/#services", label: "Services" },
@@ -15,7 +15,13 @@ export default function Footer() {
           {/* Logo + tagline */}
           <div className="flex flex-col items-center md:items-start gap-2">
             <Link href="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity duration-200">
-              <Logo size={32} />
+              <Image
+                src="/Juice_Logo.svg"
+                alt="Juice Technology Solutions logo"
+                width={32}
+                height={32}
+                className="h-8 w-8 object-contain"
+              />
               <span className="text-orange-500 font-bold text-lg tracking-tight">Juice Technology Solutions</span>
             </Link>
             <p className="text-text-secondary text-xs">
