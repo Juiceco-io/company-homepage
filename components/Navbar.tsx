@@ -1,8 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import Logo from "./Logo";
 
 const navLinks = [
   { href: "/#services", label: "Services" },
@@ -30,7 +30,14 @@ export default function Navbar() {
             href="/"
             className="logo-wrap flex items-center gap-2.5 hover:opacity-90 transition-opacity duration-200"
           >
-            <Logo size={36} className="logo-svg logo-load-anim" />
+            <Image
+              src="/juice-logo-no-bg.png"
+              alt="Juice Technology Solutions logo"
+              width={36}
+              height={36}
+              className="logo-load-anim h-9 w-9 object-contain"
+              priority
+            />
             <span className="text-orange-500 font-bold text-xl tracking-tight">Juice Technology Solutions</span>
           </Link>
 
