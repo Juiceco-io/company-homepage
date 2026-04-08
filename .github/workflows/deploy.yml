@@ -3,6 +3,8 @@ name: Deploy
 on:
   push:
     branches: [dev, qa, main]
+  pull_request:
+    branches: [dev, main]
 
 # Minimal permissions — only what each job needs
 permissions:
@@ -67,6 +69,7 @@ jobs:
   # ─────────────────────────────────────────────
   terraform-apply:
     name: Terraform Apply
+    if: github.event_name == "push"
     runs-on: ubuntu-latest
     needs: set-environment
     environment: ${{ needs.set-environment.outputs.environment }}
@@ -126,6 +129,10 @@ jobs:
             -var='cloudfront_aliases=${{ needs.set-environment.outputs.cloudfront_aliases_json }}' \
             -out=tfplan
 
+      - name: Skip apply on pull requests
+        if: github.event_name == "pull_request"
+        run: echo "PR run complete: terraform plan only, no apply."
+
       - name: Terraform Apply
         working-directory: ${{ env.TF_DIR }}
         run: terraform apply -auto-approve tfplan
@@ -157,6 +164,7 @@ jobs:
   # ─────────────────────────────────────────────
   build-and-deploy:
     name: Build & Deploy
+    if: github.event_name == "push"
     runs-on: ubuntu-latest
     needs: [set-environment, terraform-apply]
     environment: ${{ needs.set-environment.outputs.environment }}
