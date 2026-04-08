@@ -31,11 +31,11 @@ export default function Navbar() {
             className="logo-wrap flex items-center gap-2.5 hover:opacity-90 transition-opacity duration-200"
           >
             <Image
-              src="/juice-logo-no-bg.png"
+              src="/Juice_Logo.svg"
               alt="Juice Technology Solutions logo"
-              width={36}
-              height={36}
-              className="logo-load-anim h-9 w-9 object-contain"
+              width={40}
+              height={40}
+              className="logo-load-anim h-10 w-10 object-contain"
               priority
             />
             <span className="text-orange-500 font-bold text-xl tracking-tight">Juice Technology Solutions</span>
