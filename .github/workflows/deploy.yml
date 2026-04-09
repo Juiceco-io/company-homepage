@@ -59,7 +59,7 @@ jobs:
             main)
               echo "account_id=718417033936" >> $GITHUB_OUTPUT
               echo "deployer_role=arn:aws:iam::718417033936:role/github-actions-deployer" >> $GITHUB_OUTPUT
-              echo 'cloudfront_aliases_json=["juiceco.io","www.juiceco.io","juicetech.io","www.juicetech.io"]' >> $GITHUB_OUTPUT
+              echo 'cloudfront_aliases_json=["juicetech.io","www.juicetech.io","juicetech.io","www.juicetech.io"]' >> $GITHUB_OUTPUT
               ;;
           esac
           echo "state_role=arn:aws:iam::389813258758:role/github-actions-terraform-state" >> $GITHUB_OUTPUT

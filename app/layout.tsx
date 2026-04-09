@@ -28,11 +28,11 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Juice Technology Solutions" }],
   creator: "Juice Technology Solutions",
-  metadataBase: new URL("https://juiceco.io"),
+  metadataBase: new URL("https://juicetech.io"),
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://juiceco.io",
+    url: "https://juicetech.io",
     title: "Juice Technology Solutions — Custom Software Development Agency",
     description:
       "Juice Technology Solutions builds custom web apps, mobile products, and internal tools for companies that want to move fast. We design, build, and ship software that drives business.",
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://juiceco.io",
+    canonical: "https://juicetech.io",
   },
   icons: {
     icon: [
@@ -78,8 +78,8 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "Juice Technology Solutions",
-  url: "https://juiceco.io",
-  logo: "https://juiceco.io/Juice_Logo.svg",
+  url: "https://juicetech.io",
+  logo: "https://juicetech.io/Juice_Logo.svg",
   description:
     "Custom software development agency. We partner with companies to design, build, and ship web apps, mobile products, and internal tools — fast.",
   contactPoint: {
