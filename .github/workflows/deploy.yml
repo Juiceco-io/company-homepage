@@ -129,10 +129,6 @@ jobs:
             -var='cloudfront_aliases=${{ needs.set-environment.outputs.cloudfront_aliases_json }}' \
             -out=tfplan
 
-      - name: Skip apply on pull requests
-        if: github.event_name == "pull_request"
-        run: echo "PR run complete: terraform plan only, no apply."
-
       - name: Terraform Apply
         if: github.event_name == "push"
         working-directory: ${{ env.TF_DIR }}
