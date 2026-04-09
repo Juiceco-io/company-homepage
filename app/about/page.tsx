@@ -7,13 +7,13 @@ export const metadata: Metadata = {
   description:
     "We're Juice Technology Solutions — a small team with big output, obsessed with shipping quality custom software for companies that want to move fast.",
   alternates: {
-    canonical: "https://juiceco.io/about",
+    canonical: "https://juicetech.io/about",
   },
   openGraph: {
     title: "About Juice Technology Solutions | Custom Software Agency",
     description:
       "We're Juice Technology Solutions — a small team with big output, obsessed with shipping quality custom software for companies that want to move fast.",
-    url: "https://juiceco.io/about",
+    url: "https://juicetech.io/about",
   },
 };
 
