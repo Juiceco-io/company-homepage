@@ -64,40 +64,22 @@ resource "aws_cloudfront_response_headers_policy" "security_headers" {
   }
 }
 
-# Certificate lookup — recovery-safe against partial replacement state.
+# Certificate handling — zero-cert recovery safe.
 #
-# During create_before_destroy certificate rotation, the managed ACM resource can
-# point at a new PENDING_VALIDATION cert while the old cert is still serving (or
-# has become a deposed object in state). If Terraform derives CloudFront aliases
-# and viewer_certificate directly from that managed resource, it can incorrectly
-# drop the custom domain and fall back to the default CloudFront certificate.
-#
-# Strategy:
-# - Look up the best available ACM certificate from ACM itself, not just the
-#   in-flight managed resource instance.
-# - Accept ISSUED and PENDING_VALIDATION so the lookup does not fail in broken
-#   transition states where no currently-issued cert is visible via the managed
-#   resource path.
-# - Only treat the certificate as usable for CloudFront when its real-time ACM
-#   status is ISSUED.
-# - Protect aliases/viewer_certificate from being downgraded during the pending
-#   window via ignore_changes on the distribution.
-data "aws_acm_certificate" "homepage_best" {
-  count       = local.use_custom_domain ? 1 : 0
-  domain      = var.cloudfront_aliases[0]
-  statuses    = ["ISSUED", "PENDING_VALIDATION"]
-  most_recent = true
-}
-
+# We intentionally avoid a fatal ACM data lookup here. In a broken or first-run
+# state there may be no matching ACM certificate yet, and Terraform still needs
+# to be able to create one. We therefore derive CloudFront certificate use from
+# the managed ACM resource itself and keep viewer_certificate / aliases protected
+# via ignore_changes while replacement/validation is in flight.
 locals {
   use_custom_domain = length(var.cloudfront_aliases) > 0
 
-  best_cert_arn    = local.use_custom_domain ? try(data.aws_acm_certificate.homepage_best[0].arn, null) : null
-  best_cert_status = local.use_custom_domain ? try(data.aws_acm_certificate.homepage_best[0].status, null) : null
+  managed_cert_arn    = local.use_custom_domain ? try(aws_acm_certificate.homepage[0].arn, null) : null
+  managed_cert_status = local.use_custom_domain ? try(aws_acm_certificate.homepage[0].status, null) : null
 
-  certificate_issued = local.best_cert_arn != null && local.best_cert_status == "ISSUED"
+  certificate_issued = local.managed_cert_arn != null && local.managed_cert_status == "ISSUED"
   effective_aliases  = local.certificate_issued ? var.cloudfront_aliases : []
-  effective_cert_arn = local.certificate_issued ? local.best_cert_arn : null
+  effective_cert_arn = local.certificate_issued ? local.managed_cert_arn : null
 }
 
 resource "aws_acm_certificate" "homepage" {
