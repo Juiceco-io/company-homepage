@@ -34,7 +34,7 @@ jobs:
         run: |
           BRANCH_NAME="${{ github.ref_name }}"
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            BRANCH_NAME="${{ github.head_ref }}"
+            BRANCH_NAME="${{ github.base_ref }}"
           fi
 
           case "$BRANCH_NAME" in
@@ -52,7 +52,7 @@ jobs:
         run: |
           BRANCH_NAME="${{ github.ref_name }}"
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            BRANCH_NAME="${{ github.head_ref }}"
+            BRANCH_NAME="${{ github.base_ref }}"
           fi
 
           case "$BRANCH_NAME" in
