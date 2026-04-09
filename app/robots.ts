@@ -8,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://juiceco.io/sitemap.xml",
+    sitemap: "https://juicetech.io/sitemap.xml",
   };
 }

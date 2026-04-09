@@ -3,6 +3,8 @@ name: Deploy
 on:
   push:
     branches: [dev, qa, main]
+  pull_request:
+    branches: [dev, main]
 
 # Minimal permissions — only what each job needs
 permissions:
@@ -30,12 +32,17 @@ jobs:
       - id: set-env
         name: Map branch → environment
         run: |
-          case "${{ github.ref_name }}" in
+          BRANCH_NAME="${{ github.ref_name }}"
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BRANCH_NAME="${{ github.base_ref }}"
+          fi
+
+          case "$BRANCH_NAME" in
             dev)  echo "environment=dev"  >> $GITHUB_OUTPUT ;;
             qa)   echo "environment=qa"   >> $GITHUB_OUTPUT ;;
             main) echo "environment=prod" >> $GITHUB_OUTPUT ;;
             *)
-              echo "Unknown branch: ${{ github.ref_name }}" >&2
+              echo "Unknown branch: $BRANCH_NAME" >&2
               exit 1
               ;;
           esac
@@ -43,7 +50,12 @@ jobs:
       - name: Set AWS config
         id: aws-config
         run: |
-          case "${{ github.ref_name }}" in
+          BRANCH_NAME="${{ github.ref_name }}"
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BRANCH_NAME="${{ github.base_ref }}"
+          fi
+
+          case "$BRANCH_NAME" in
             dev)
               echo "account_id=680666325340" >> $GITHUB_OUTPUT
               echo "deployer_role=arn:aws:iam::680666325340:role/github-actions-deployer" >> $GITHUB_OUTPUT
@@ -57,7 +69,11 @@ jobs:
             main)
               echo "account_id=718417033936" >> $GITHUB_OUTPUT
               echo "deployer_role=arn:aws:iam::718417033936:role/github-actions-deployer" >> $GITHUB_OUTPUT
-              echo 'cloudfront_aliases_json=["juiceco.io","www.juiceco.io","juicetech.io","www.juicetech.io"]' >> $GITHUB_OUTPUT
+              echo 'cloudfront_aliases_json=["juicetech.io","www.juicetech.io","juicetech.io","www.juicetech.io"]' >> $GITHUB_OUTPUT
+              ;;
+            *)
+              echo "Unknown branch: $BRANCH_NAME" >&2
+              exit 1
               ;;
           esac
           echo "state_role=arn:aws:iam::389813258758:role/github-actions-terraform-state" >> $GITHUB_OUTPUT
@@ -67,6 +83,7 @@ jobs:
   # ─────────────────────────────────────────────
   terraform-apply:
     name: Terraform Apply
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     needs: set-environment
     environment: ${{ needs.set-environment.outputs.environment }}
@@ -127,6 +144,7 @@ jobs:
             -out=tfplan
 
       - name: Terraform Apply
+        if: github.event_name == 'push'
         working-directory: ${{ env.TF_DIR }}
         run: terraform apply -auto-approve tfplan
 
@@ -157,6 +175,7 @@ jobs:
   # ─────────────────────────────────────────────
   build-and-deploy:
     name: Build & Deploy
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     needs: [set-environment, terraform-apply]
     environment: ${{ needs.set-environment.outputs.environment }}

@@ -7,13 +7,13 @@ export const metadata: Metadata = {
   description:
     "Ready to build something great? Tell us about your project and we'll get back to you within one business day. Custom software development starts here.",
   alternates: {
-    canonical: "https://juiceco.io/contact",
+    canonical: "https://juicetech.io/contact",
   },
   openGraph: {
     title: "Start a Project | Juice Technology Solutions",
     description:
       "Ready to build something great? Tell us about your project and we'll get back to you within one business day.",
-    url: "https://juiceco.io/contact",
+    url: "https://juicetech.io/contact",
   },
 };
 
