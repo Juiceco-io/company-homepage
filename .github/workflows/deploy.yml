@@ -69,7 +69,7 @@ jobs:
   # ─────────────────────────────────────────────
   terraform-apply:
     name: Terraform Apply
-    if: github.event_name == "push"
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     needs: set-environment
     environment: ${{ needs.set-environment.outputs.environment }}
@@ -130,7 +130,7 @@ jobs:
             -out=tfplan
 
       - name: Terraform Apply
-        if: github.event_name == "push"
+        if: github.event_name == 'push'
         working-directory: ${{ env.TF_DIR }}
         run: terraform apply -auto-approve tfplan
 
@@ -161,7 +161,7 @@ jobs:
   # ─────────────────────────────────────────────
   build-and-deploy:
     name: Build & Deploy
-    if: github.event_name == "push"
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     needs: [set-environment, terraform-apply]
     environment: ${{ needs.set-environment.outputs.environment }}
