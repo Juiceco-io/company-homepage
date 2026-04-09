@@ -134,6 +134,7 @@ jobs:
         run: echo "PR run complete: terraform plan only, no apply."
 
       - name: Terraform Apply
+        if: github.event_name == "push"
         working-directory: ${{ env.TF_DIR }}
         run: terraform apply -auto-approve tfplan
 
