@@ -131,7 +131,7 @@ jobs:
             -out=tfplan
 
       - name: Terraform Apply
-            working-directory: ${{ env.TF_DIR }}
+        working-directory: ${{ env.TF_DIR }}
         run: terraform apply -auto-approve tfplan
 
       - name: Get Terraform Outputs
