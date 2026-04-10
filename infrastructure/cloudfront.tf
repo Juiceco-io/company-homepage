@@ -149,16 +149,6 @@ resource "aws_cloudfront_distribution" "homepage" {
     minimum_protocol_version       = local.certificate_issued ? "TLSv1.2_2021" : null
   }
 
-  lifecycle {
-    # While the replacement certificate is still pending, never let Terraform
-    # write a downgraded distribution config that strips aliases or falls back
-    # to the default CloudFront certificate. Keep the live config in place until
-    # ACM has a genuinely ISSUED cert available.
-    ignore_changes = [
-      aliases,
-      viewer_certificate,
-    ]
-  }
 }
 
 resource "aws_cloudfront_function" "rewrite_uri" {
