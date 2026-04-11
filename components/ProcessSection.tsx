@@ -74,10 +74,10 @@ export default function ProcessSection() {
           transition={{ duration: 0.6, ease: 'easeOut' } as Transition}
         >
           <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
-            How We Work
+            Our Custom Software Development Process
           </h2>
-          <p className="text-text-secondary text-lg max-w-2xl mx-auto">
-            A tight, proven process. No surprises, no dead ends.
+          <p className="text-text-secondary text-lg max-w-3xl mx-auto">
+            A clear path from discovery to launch for internal tools, web applications, and modern software systems.
           </p>
         </motion.div>
 
