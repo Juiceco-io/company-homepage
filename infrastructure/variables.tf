@@ -17,9 +17,8 @@ variable "aws_region" {
 }
 
 variable "deployer_role_arn" {
-  description = "IAM role ARN to assume for deploying resources"
+  description = "IAM role ARN to assume for deploying resources (must be provided by CI or CLI)"
   type        = string
-  default     = "arn:aws:iam::680666325340:role/github-actions-deployer"
 }
 
 variable "rum_domain" {

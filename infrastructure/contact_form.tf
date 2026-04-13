@@ -79,7 +79,7 @@ resource "aws_iam_role_policy" "contact_form_lambda" {
           "logs:CreateLogStream",
           "logs:PutLogEvents"
         ]
-        Resource = "arn:aws:logs:${var.aws_region}:*:*"
+        Resource = "arn:aws:logs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${var.project}-${var.environment}-contact-form:*"
       },
       {
         Effect = "Allow"
@@ -92,7 +92,6 @@ resource "aws_iam_role_policy" "contact_form_lambda" {
         # is insufficient when SES v2 resolves the sender's identity at call time.
         Resource = [
           aws_ses_domain_identity.contact.arn,
-          "arn:aws:ses:${var.aws_region}:${data.aws_caller_identity.current.account_id}:identity/*",
         ]
       }
     ]
@@ -134,10 +133,35 @@ resource "aws_apigatewayv2_api" "contact_form" {
   }
 }
 
+resource "aws_cloudwatch_log_group" "contact_form_api" {
+  name              = "/aws/apigateway/${var.project}-${var.environment}-contact-form"
+  retention_in_days = 14
+}
+
 resource "aws_apigatewayv2_stage" "contact_form" {
   api_id      = aws_apigatewayv2_api.contact_form.id
   name        = "$default"
   auto_deploy = true
+
+  access_log_settings {
+    destination_arn = aws_cloudwatch_log_group.contact_form_api.arn
+    format = jsonencode({
+      requestId               = "$context.requestId"
+      sourceIp                = "$context.identity.sourceIp"
+      requestTime             = "$context.requestTime"
+      httpMethod              = "$context.httpMethod"
+      routeKey                = "$context.routeKey"
+      status                  = "$context.status"
+      protocol                = "$context.protocol"
+      responseLength          = "$context.responseLength"
+      integrationErrorMessage = "$context.integrationErrorMessage"
+    })
+  }
+
+  default_route_settings {
+    throttling_burst_limit = 50
+    throttling_rate_limit  = 20
+  }
 }
 
 resource "aws_apigatewayv2_integration" "contact_form" {

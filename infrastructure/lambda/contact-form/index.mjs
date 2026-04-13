@@ -19,7 +19,12 @@ const escapeHtml = (value = "") => value
 
 export const handler = async (event) => {
   try {
-    const payload = event?.body ? JSON.parse(event.body) : {};
+    let payload;
+    try {
+      payload = event?.body ? JSON.parse(event.body) : {};
+    } catch {
+      return json(400, { error: "Invalid request." });
+    }
     const name = String(payload.name ?? "").trim();
     const email = String(payload.email ?? "").trim();
     const company = String(payload.company ?? "").trim();
