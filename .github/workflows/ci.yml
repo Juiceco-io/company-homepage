@@ -13,6 +13,13 @@ on:
       - prod
       - main
 
+# Read access to GitHub Packages is granted to the workflow so npm install can
+# pull private @juiceco-io/* packages (e.g. @juiceco-io/rum-init). The standard
+# GITHUB_TOKEN is used for auth — no PATs required.
+permissions:
+  contents: read
+  packages: read
+
 jobs:
   ci:
     name: Lint, Typecheck & Build
@@ -27,8 +34,12 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@juiceco-io'
 
       - name: Install dependencies
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm ci
 
       - name: Lint
