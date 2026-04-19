@@ -38,7 +38,12 @@ resource "aws_cloudfront_response_headers_policy" "security_headers" {
     }
 
     content_security_policy {
-      content_security_policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://*.execute-api.us-east-1.amazonaws.com; frame-ancestors 'none'"
+      # connect-src allows:
+      #   'self'                                           — page origin
+      #   https://*.execute-api.us-east-1.amazonaws.com    — app APIs
+      #   https://cognito-identity.us-east-1.amazonaws.com — Cognito Identity Pool (RUM guest auth)
+      #   https://dataplane.rum.us-east-1.amazonaws.com    — CloudWatch RUM events endpoint
+      content_security_policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://*.execute-api.us-east-1.amazonaws.com https://cognito-identity.us-east-1.amazonaws.com https://dataplane.rum.us-east-1.amazonaws.com; frame-ancestors 'none'"
       override                = true
     }
   }
