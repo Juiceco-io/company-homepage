@@ -12,7 +12,7 @@
 |-------|-------|
 | Slug | `company-homepage` |
 | Name | Company Homepage |
-| Class | `unknown` |
+| Class | `nextjs-public` |
 
 ---
 
