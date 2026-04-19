@@ -14,7 +14,7 @@ jobs:
         env:
           HEAD_REF: ${{ github.head_ref }}
         run: |
-          ALLOWED_BRANCHES="dev"
+          ALLOWED_BRANCHES="dev qa"
           for branch in $ALLOWED_BRANCHES; do
             if [ "$HEAD_REF" = "$branch" ]; then
               echo "✅ Source branch '$HEAD_REF' is allowed to promote to main."
