@@ -8,6 +8,7 @@ on:
 permissions:
   id-token: write   # Required for OIDC token
   contents: read
+  packages: read    # Install @juiceco-io/* private packages from GH Packages
 
 env:
   AWS_REGION: us-east-1
@@ -196,8 +197,12 @@ jobs:
         with:
           node-version: "20"
           cache: "npm"
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@juiceco-io"
 
       - name: Install dependencies
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm ci
 
       - name: Audit dependencies
